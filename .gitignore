@@ -1,0 +1,29 @@
+# Virtual Environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# SQLite database
+*.db
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Build files
+dist/
+build/
+
+#Documentation folder
+documentation/

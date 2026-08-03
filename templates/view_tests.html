@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tests</title>
+</head>
+
+<body>
+
+<h2>All Tests</h2>
+
+<table border="1">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Duration</th>
+
+</tr>
+
+{% for test in tests %}
+
+<tr>
+
+<td>{{ test.id }}</td>
+
+<td>{{ test.test_name }}</td>
+
+<td>{{ test.duration }} Minutes</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+
+</html>

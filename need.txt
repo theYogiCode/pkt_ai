@@ -1,0 +1,7 @@
+PKT tool with AI option
+1.making a test taking tool, which would capture name, id of the user. It would give show the question and give option to select and submit the answer.
+2. screen sharing feature like google chat for the auditor, so that to share the computer screen for viewing the components on which questions is based.
+3. selected answers would get saved in a common file in order username, id, question and selected answer. admin would have an option to save the file in excel or csv file.
+4. generating auto scores individual wise and team wise.
+5. generating auto insights about the incorrect answers and suggesting a solution.
+6. giving option to email the individual scores and team scores which includes insights and fix.
