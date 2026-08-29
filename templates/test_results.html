@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Individual Test Results</title>
+
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h2>Individual Test Results</h2>
+
+    <hr>
+
+    {% if attempts %}
+
+    <!-- Display completed attempts -->
+    <table border="1">
+
+        <tr>
+
+            <th>Employee ID</th>
+
+            <th>Employee Name</th>
+
+            <th>Team</th>
+
+            <th>Test</th>
+
+            <th>Score</th>
+
+            <th>Percentage</th>
+
+            <th>Status</th>
+
+            <th>Completed At</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+
+        {% for attempt in attempts %}
+
+        <tr>
+
+            <!-- Employee ID -->
+            <td>
+                {{ attempt.employee.employee_id }}
+            </td>
+
+            <!-- Employee Name -->
+            <td>
+                {{ attempt.employee.name }}
+            </td>
+
+            <!-- Team -->
+            <td>
+                {{ attempt.employee.team.team_name }}
+            </td>
+
+            <!-- Test Name -->
+            <td>
+                {{ attempt.test.test_name }}
+            </td>
+
+            <!-- Score -->
+            <td>
+                {{ attempt.score }}
+            </td>
+
+            <!-- Percentage -->
+            <td>
+                {{ "%.2f"|format(attempt.percentage) }}%
+            </td>
+
+            <!-- Status -->
+            <td>
+                {{ attempt.status }}
+            </td>
+
+            <!-- Completion time -->
+            <td>
+                {{ attempt.completed_at }}
+            </td>
+            <td>
+
+                 <!-- Open AI Insights for this test attempt -->
+                <a href="{{ url_for('test.test_insights', attempt_id=attempt.id) }}">
+
+                    <button type="button">
+                        AI Insights
+                    </button>
+
+                </a>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <!-- Display this when there are no completed tests -->
+    <p>
+        No completed test results found.
+    </p>
+
+    {% endif %}
+
+    <br>
+
+    <!-- This button downloads all individual results as an Excel file. -->
+    <a href="{{ url_for('test.export_individual_results_excel') }}">
+
+        <button type="button">
+            Export Individual Results - Excel
+        </button>
+
+    </a>
+
+    <br><br>
+    <!-- This button downloads all individual results as a CSV file. -->
+    <a href="{{ url_for('test.export_individual_results_csv') }}">
+
+        <button type="button">
+            Export Individual Results - CSV
+        </button>
+
+    </a>
+
+    <br><br>
+    <!-- Return to admin dashboard -->
+    <a href="{{ url_for('auth.dashboard') }}">
+
+        <button type="button">
+            Back to Dashboard
+        </button>
+
+    </a>
+
+</body>
+
+</html>

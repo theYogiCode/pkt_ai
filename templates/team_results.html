@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Team Results</title>
+
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h2>Team-wise Test Results</h2>
+
+    <hr>
+
+
+    <!-- Display team results -->
+    <table border="1">
+
+        <tr>
+
+            <th>Team</th>
+
+            <th>Test</th>
+
+            <th>Employees Completed</th>
+
+            <th>Total Score</th>
+
+            <th>Total Possible</th>
+
+            <th>Average Percentage</th>
+
+        </tr>
+
+
+        {% for result in results %}
+
+        <tr>
+
+            <!-- Team name -->
+            <td>
+                {{ result.team_name }}
+            </td>
+
+
+            <!-- Test name -->
+            <td>
+                {{ result.test_name }}
+            </td>
+
+
+            <!-- Number of employees -->
+            <td>
+                {{ result.employee_count }}
+            </td>
+
+
+            <!-- Total score -->
+            <td>
+                {{ result.total_score }}
+            </td>
+
+
+            <!-- Maximum possible score -->
+            <td>
+                {{ result.total_possible }}
+            </td>
+
+
+            <!-- Average percentage -->
+            <td>
+                {{ "%.2f"|format(result.average_percentage) }}%
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+    </table>
+
+    <br>
+
+
+    <!-- Download team results as Excel -->
+    <a href="{{ url_for('test.export_team_results_excel') }}">
+
+        <button type="button">
+            Export Team Results - Excel
+        </button>
+
+    </a>
+
+    <br><br>
+
+
+    <!-- Download team results as CSV -->
+    <a href="{{ url_for('test.export_team_results_csv') }}">
+
+        <button type="button">
+            Export Team Results - CSV
+        </button>
+
+    </a>
+
+    <br><br>
+
+
+    <!-- Return to the admin dashboard -->
+    <a href="{{ url_for('auth.dashboard') }}">
+
+        <button type="button">
+            Back to Dashboard
+        </button>
+
+    </a>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Question Management</title>
+
+</head>
+
+<body>
+
+<h2>{{ test.test_name }}</h2>
+
+<p>
+
+Duration :
+{{ test.duration }} Minutes
+
+</p>
+
+<hr>
+
+<a href="{{ url_for('test.add_question', test_id=test.id) }}">
+
+<button>
+
+Add Question
+
+</button>
+
+</a>
+
+<br><br>
+
+<table border="1">
+
+<tr>
+
+<th>No.</th>
+
+<th>Question</th>
+
+<th>Correct</th>
+
+<th>Marks</th>
+
+<th>Actions</th>
+
+</tr>
+
+{% for question in questions %}
+
+<tr>
+
+<td>{{ question.question_number }}</td>
+
+<td>{{ question.question_text }}</td>
+
+<td>{{ question.correct_answer }}</td>
+
+<td>{{ question.marks }}</td>
+
+<!-- This button opens the selected question for editing. -->
+
+<!-- These buttons allow the admin to edit or delete the question. -->
+
+<td>
+
+    <a href="{{ url_for(
+        'test.edit_question',
+        test_id=test.id,
+        question_id=question.id
+    ) }}">
+        <button type="button">Edit</button>
+    </a>
+
+
+    <a href="{{ url_for(
+        'test.delete_question',
+        test_id=test.id,
+        question_id=question.id
+    ) }}">
+        <button type="button">Delete</button>
+    </a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+
+</html>

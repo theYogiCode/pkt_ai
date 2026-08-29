@@ -13,39 +13,68 @@
 
 <h3>Test Management</h3>
 
+<!-- Create a new test -->
 <a href="/tests/create">
-    <button>Create New Test</button>
+    <button type="button">
+        Create New Test
+    </button>
 </a>
 
 <br><br>
 
+<!-- View existing tests -->
 <a href="/tests">
-    <button>View Tests</button>
+    <button type="button">
+        View Tests
+    </button>
 </a>
 
 <hr>
 
 <h3>Candidate Management</h3>
 
-<button disabled>Employees</button>
+<!-- Employee management will be implemented later -->
+<button disabled>
+    Employees
+</button>
 
 <hr>
 
 <h3>Reports</h3>
 
-<button disabled>Reports</button>
+<!-- Open individual candidate results -->
+<a href="{{ url_for('test.test_results') }}">
+    <button type="button">
+        Individual Results
+    </button>
+</a>
+
+<br><br>
+
+<!-- Open team-wise results -->
+<a href="{{ url_for('test.team_results') }}">
+    <button type="button">
+        Team Results
+    </button>
+</a>
 
 <hr>
 
 <h3>Screen Share</h3>
 
-<button disabled>Start Screen Share</button>
+<!-- Screen sharing will be implemented later -->
+<button disabled>
+    Start Screen Share
+</button>
 
 <hr>
 
 <h3>AI Insights</h3>
 
-<button disabled>Generate Insights</button>
+<!-- AI insights will be implemented later -->
+<button disabled>
+    Generate Insights
+</button>
 
 </body>
 

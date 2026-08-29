@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Page title -->
+    <title>AI Insights</title>
+
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h2>AI Insights</h2>
+
+    <hr>
+
+
+    <!-- Candidate information -->
+    <h3>Candidate Information</h3>
+
+    <p>
+        <strong>Employee ID:</strong>
+        {{ attempt.employee.employee_id }}
+    </p>
+
+    <p>
+        <strong>Name:</strong>
+        {{ attempt.employee.name }}
+    </p>
+
+    <p>
+        <strong>Team:</strong>
+        {{ attempt.employee.team.team_name }}
+    </p>
+
+
+    <!-- Test information -->
+    <p>
+        <strong>Test:</strong>
+        {{ attempt.test.test_name }}
+    </p>
+
+    <p>
+        <strong>Score:</strong>
+        {{ attempt.score }}
+    </p>
+
+    <p>
+        <strong>Percentage:</strong>
+        {{ "%.2f"|format(attempt.percentage or 0) }}%
+    </p>
+
+    <hr>
+
+
+    <!-- Number of incorrect answers -->
+    <h3>
+        Incorrect / Unanswered Questions:
+        {{ incorrect_answers|length }}
+    </h3>
+
+
+    <!-- Display each incorrect question -->
+    {% for item in incorrect_answers %}
+
+        <hr>
+
+        <h3>
+            Question {{ item.question_number }}
+        </h3>
+
+        <p>
+
+            <strong>Question:</strong>
+
+            {{ item.question }}
+
+        </p>
+
+
+        <p>
+
+            <strong>Status:</strong>
+
+            {{ item.status }}
+
+        </p>
+
+
+        <p>
+
+            <strong>Selected Answer:</strong>
+
+            {{ item.selected_answer }}
+
+        </p>
+
+
+        <p>
+
+            <strong>Correct Answer:</strong>
+
+            {{ item.correct_answer }}
+
+        </p>
+
+
+        <p>
+
+            <strong>Marks:</strong>
+
+            {{ item.marks }}
+
+        </p>
+
+
+        <!-- Placeholder for AI-generated explanation -->
+        <h4>AI Explanation</h4>
+
+        <p>
+            AI analysis will appear here.
+        </p>
+
+
+        <!-- Placeholder for AI-generated solution -->
+        <h4>Suggested Fix</h4>
+
+        <p>
+            AI suggested solution will appear here.
+        </p>
+
+    {% endfor %}
+
+
+    <!-- Message when there are no incorrect answers -->
+    {% if not incorrect_answers %}
+
+        <p>
+            Excellent! No incorrect answers were found.
+        </p>
+
+    {% endif %}
+
+
+    <hr>
+
+
+    <!-- Return to individual results -->
+    <a href="{{ url_for('test.test_results') }}">
+
+        <button type="button">
+            Back to Individual Results
+        </button>
+
+    </a>
+
+
+    <br><br>
+
+
+    <!-- Return to dashboard -->
+    <a href="{{ url_for('auth.dashboard') }}">
+
+        <button type="button">
+            Back to Dashboard
+        </button>
+
+    </a>
+
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Take Test</title>
+
+</head>
+
+<body>
+
+    <!-- Candidate information -->
+    <h3>
+        Candidate:
+        {{ session.get("candidate_name") }}
+    </h3>
+
+    <p>
+        Candidate ID:
+        {{ session.get("candidate_id") }}
+    </p>
+
+    <hr>
+
+    <!-- Test information -->
+    <h2>
+        {{ test.test_name }}
+    </h2>
+
+    <h3>
+        Question {{ question_number }}
+        of
+        {{ total_questions }}
+    </h3>
+
+    <hr>
+
+
+    <!-- Current question -->
+    <h3>
+        {{ question.question_text }}
+    </h3>
+
+
+    <!--
+        The candidate submits the selected answer
+        using the POST method.
+    -->
+    <form method="POST">
+
+
+        <!-- Option A -->
+
+        <p>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="A"
+                    {% if selected_answer == "A" %}
+                        checked
+                    {% endif %}
+                    required>
+
+                A. {{ question.option_a }}
+
+            </label>
+
+        </p>
+
+
+        <!-- Option B -->
+
+        <p>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="B"
+                    {% if selected_answer == "B" %}
+                        checked
+                    {% endif %}
+                    required>
+
+                B. {{ question.option_b }}
+
+            </label>
+
+        </p>
+
+
+        <!-- Option C -->
+
+        <p>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="C"
+                    {% if selected_answer == "C" %}
+                        checked
+                    {% endif %}
+                    required>
+
+                C. {{ question.option_c }}
+
+            </label>
+
+        </p>
+
+
+        <!-- Option D -->
+
+        <p>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="D"
+                    {% if selected_answer == "D" %}
+                        checked
+                    {% endif %}
+                    required>
+
+                D. {{ question.option_d }}
+
+            </label>
+
+        </p>
+
+
+        <br>
+
+
+        <!-- Previous button -->
+
+        {% if question_number > 1 %}
+
+            <button
+                type="submit"
+                name="navigation"
+                value="previous">
+
+                Previous
+
+            </button>
+
+        {% endif %}
+
+
+        <!-- Next button -->
+
+        {% if question_number < total_questions %}
+
+            <button
+                type="submit"
+                name="navigation"
+                value="next">
+
+                Next
+
+            </button>
+
+        {% endif %}
+
+
+        <!-- Submit button on the last question -->
+
+        {% if question_number == total_questions %}
+
+            <button
+                type="submit"
+                name="navigation"
+                value="submit">
+
+                Submit Test
+
+            </button>
+
+        {% endif %}
+
+
+    </form>
+
+</body>
+
+</html>

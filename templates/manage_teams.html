@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manage Teams</title>
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h2>Manage Teams</h2>
+
+    <hr>
+
+    <!-- Link to create a new team -->
+    <a href="{{ url_for('test.create_team') }}">
+        <button type="button">
+            Add Team
+        </button>
+    </a>
+
+    <br><br>
+
+    <!-- Display existing teams -->
+    <table border="1">
+
+        <tr>
+            <th>ID</th>
+            <th>Team Name</th>
+            <th>Process</th>
+            <th>Manager</th>
+        </tr>
+
+        {% for team in teams %}
+
+        <tr>
+
+            <td>
+                {{ team.id }}
+            </td>
+
+            <td>
+                {{ team.team_name }}
+            </td>
+
+            <td>
+                {{ team.process_name }}
+            </td>
+
+            <td>
+                {{ team.manager_name }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+
+</html>

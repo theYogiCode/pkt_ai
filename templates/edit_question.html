@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Question</title>
+</head>
+
+<body>
+
+    <!-- Display the page title. -->
+    <h2>Edit Question</h2>
+
+    <!-- Display the test to which this question belongs. -->
+    <h3>Test: {{ test.test_name }}</h3>
+
+    <!-- Display the question number. -->
+    <p>
+        Question Number: {{ question.question_number }}
+    </p>
+
+    <hr>
+
+    <!--
+        This form sends the updated information to the edit_question
+        Flask route using POST.
+    -->
+    <form method="POST">
+
+        <!-- Question text -->
+        <label>Question:</label>
+        <br>
+
+        <textarea
+            name="question_text"
+            rows="6"
+            cols="80"
+            required>{{ question.question_text }}</textarea>
+
+        <br><br>
+
+
+        <!-- Option A -->
+        <label>Option A:</label>
+        <br>
+
+        <input
+            type="text"
+            name="option_a"
+            value="{{ question.option_a }}"
+            size="80"
+            required>
+
+        <br><br>
+
+
+        <!-- Option B -->
+        <label>Option B:</label>
+        <br>
+
+        <input
+            type="text"
+            name="option_b"
+            value="{{ question.option_b }}"
+            size="80"
+            required>
+
+        <br><br>
+
+
+        <!-- Option C -->
+        <label>Option C:</label>
+        <br>
+
+        <input
+            type="text"
+            name="option_c"
+            value="{{ question.option_c }}"
+            size="80"
+            required>
+
+        <br><br>
+
+
+        <!-- Option D -->
+        <label>Option D:</label>
+        <br>
+
+        <input
+            type="text"
+            name="option_d"
+            value="{{ question.option_d }}"
+            size="80"
+            required>
+
+        <br><br>
+
+
+        <!-- Correct answer -->
+        <label>Correct Answer:</label>
+        <br>
+
+        <select name="correct_answer" required>
+
+            <option value="A"
+                {% if question.correct_answer == "A" %}selected{% endif %}>
+                A
+            </option>
+
+            <option value="B"
+                {% if question.correct_answer == "B" %}selected{% endif %}>
+                B
+            </option>
+
+            <option value="C"
+                {% if question.correct_answer == "C" %}selected{% endif %}>
+                C
+            </option>
+
+            <option value="D"
+                {% if question.correct_answer == "D" %}selected{% endif %}>
+                D
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Marks -->
+        <label>Marks:</label>
+        <br>
+
+        <input
+            type="number"
+            name="marks"
+            value="{{ question.marks }}"
+            min="1"
+            required>
+
+        <br><br>
+
+
+        <!-- Submit updated question -->
+        <button type="submit">
+            Update Question
+        </button>
+
+    </form>
+
+    <br>
+
+    <!-- Return without making changes. -->
+    <a href="{{ url_for(
+        'test.manage_questions',
+        test_id=test.id
+    ) }}">
+        <button type="button">
+            Cancel
+        </button>
+    </a>
+
+</body>
+
+</html>

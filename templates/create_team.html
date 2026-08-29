@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Team</title>
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h2>Create Team</h2>
+
+    <hr>
+
+    <!-- Team creation form -->
+    <form method="POST">
+
+        <!-- Team name -->
+        <label>
+            Team Name:
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            name="team_name"
+            required>
+
+        <br><br>
+
+
+        <!-- Process name -->
+        <label>
+            Process Name:
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            name="process_name">
+
+        <br><br>
+
+
+        <!-- Manager name -->
+        <label>
+            Manager Name:
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            name="manager_name">
+
+        <br><br>
+
+
+        <!-- Submit -->
+        <button type="submit">
+            Save Team
+        </button>
+
+    </form>
+
+    <br>
+
+    <!-- Return to team list -->
+    <a href="{{ url_for('test.manage_teams') }}">
+        <button type="button">
+            Cancel
+        </button>
+    </a>
+
+</body>
+
+</html>

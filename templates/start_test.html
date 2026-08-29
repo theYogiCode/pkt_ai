@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Start Test</title>
+
+</head>
+
+<body>
+
+    <!-- Display the selected test -->
+    <h2>{{ test.test_name }}</h2>
+
+    <p>
+        Duration: {{ test.duration }} Minutes
+    </p>
+
+    <p>
+        Total Questions: {{ test.total_questions }}
+    </p>
+
+    <hr>
+
+    <h3>Candidate Details</h3>
+
+
+    <!-- Candidate information form -->
+
+    <form method="POST">
+
+
+        <!-- Employee ID -->
+
+        <label>
+            Employee ID:
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            id="candidate_id"
+            name="candidate_id"
+            autocomplete="off"
+            required>
+
+        <!-- Employee suggestions appear here -->
+
+        <div
+            id="employee_suggestions">
+        </div>
+
+        <br>
+
+
+        <!-- Employee Name -->
+
+        <label>
+            Employee Name:
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            id="candidate_name"
+            name="candidate_name"
+            required>
+
+        <br><br>
+
+
+        <!-- Team -->
+
+        <label>
+            Team:
+        </label>
+
+        <br>
+
+        <select
+            id="team_id"
+            name="team_id"
+            required>
+
+            <option value="">
+                -- Select Team --
+            </option>
+
+            {% for team in teams %}
+
+                <option value="{{ team.id }}">
+                    {{ team.team_name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Message -->
+
+        <p id="employee_message"></p>
+
+
+        <!-- Start Test -->
+
+        <button type="submit">
+            Start Test
+        </button>
+
+    </form>
+
+
+    <!--
+        JavaScript controls the employee autocomplete.
+    -->
+
+    <script>
+
+        // Get the Employee ID input.
+        const employeeIdInput =
+            document.getElementById("candidate_id");
+
+
+        // Get the Employee Name input.
+        const employeeNameInput =
+            document.getElementById("candidate_name");
+
+
+        // Get the Team dropdown.
+        const teamSelect =
+            document.getElementById("team_id");
+
+
+        // Get the suggestion container.
+        const suggestions =
+            document.getElementById(
+                "employee_suggestions"
+            );
+
+
+        // Get the message area.
+        const message =
+            document.getElementById(
+                "employee_message"
+            );
+
+
+        // Listen whenever the candidate types
+        // into the Employee ID field.
+
+        employeeIdInput.addEventListener(
+            "input",
+            async function () {
+
+                // Get the current value.
+                const searchText =
+                    employeeIdInput.value.trim();
+
+
+                // Clear old suggestions.
+                suggestions.innerHTML = "";
+
+                message.textContent = "";
+
+
+                // Don't search for very short values.
+                if (searchText.length < 2) {
+
+                    return;
+
+                }
+
+
+                // Ask Flask to search employees.
+
+                const response = await fetch(
+                    `/employees/search?q=${encodeURIComponent(searchText)}`
+                );
+
+
+                // Convert response into JSON.
+                const data =
+                    await response.json();
+
+
+                // Display each matching employee.
+
+                data.employees.forEach(
+                    function (employee) {
+
+                        // Create a suggestion button.
+                        const button =
+                            document.createElement(
+                                "button"
+                            );
+
+
+                        button.type = "button";
+
+
+                        button.textContent =
+                            employee.employee_id
+                            + " - "
+                            + employee.name;
+
+
+                        // When the suggestion is clicked,
+                        // populate the employee information.
+
+                        button.onclick =
+                            function () {
+
+                                employeeIdInput.value =
+                                    employee.employee_id;
+
+
+                                employeeNameInput.value =
+                                    employee.name;
+
+
+                                teamSelect.value =
+                                    employee.team_id;
+
+
+                                suggestions.innerHTML =
+                                    "";
+
+
+                                message.textContent =
+                                    "Existing employee found.";
+
+                            };
+
+
+                        // Add the button to the page.
+                        suggestions.appendChild(
+                            button
+                        );
+
+
+                        suggestions.appendChild(
+                            document.createElement("br")
+                        );
+
+                    }
+                );
+
+
+                // If no employees were found,
+                // allow registration as a new employee.
+
+                if (data.employees.length === 0) {
+
+                    message.textContent =
+                        "New employee. Enter name and select team.";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Result</title>
+</head>
+
+<body>
+
+    <!-- Display the test name -->
+    <h2>Test Completed</h2>
+
+    <h3>{{ test.test_name }}</h3>
+
+    <hr>
+
+    <!-- Display the candidate's score -->
+    <h3>
+        Score:
+        {{ score }}
+        /
+        {{ maximum_score }}
+    </h3>
+
+    <!-- Display percentage -->
+    <h3>
+        Percentage:
+        {{ "%.2f"|format(percentage) }}%
+    </h3>
+
+    <hr>
+
+    <p>
+        Your test has been successfully submitted.
+    </p>
+
+</body>
+
+</html>

@@ -2,38 +2,53 @@
 <html>
 
 <head>
-    <title>Tests</title>
+    <title>All Tests</title>
 </head>
 
 <body>
 
 <h2>All Tests</h2>
 
-<table border="1">
+<a href="{{ url_for('test.create_test') }}">
+    <button>Create New Test</button>
+</a>
 
-<tr>
+<br><br>
 
-<th>ID</th>
+<table border="1" cellpadding="8">
 
-<th>Name</th>
+    <tr>
+        <th>ID</th>
+        <th>Test Name</th>
+        <th>Duration</th>
+        <th>Actions</th>
+    </tr>
 
-<th>Duration</th>
+    {% for test in tests %}
+    <tr>
 
-</tr>
+        <td>{{ test.id }}</td>
 
-{% for test in tests %}
+        <td>{{ test.test_name }}</td>
 
-<tr>
+        <td>{{ test.duration }} Minutes</td>
 
-<td>{{ test.id }}</td>
+        <td>
+            <a href="{{ url_for('test.manage_questions', test_id=test.id) }}">
+                <button>Open</button>
+            </a>
 
-<td>{{ test.test_name }}</td>
+            <a href="{{ url_for('test.delete_test', test_id=test.id) }}">
+                <button>Delete</button>
+            </a>
+            <a href="{{ url_for('test.start_test', test_id=test.id) }}">
+                <button>Take Test</button>
+            </a>
 
-<td>{{ test.duration }} Minutes</td>
+        </td>
 
-</tr>
-
-{% endfor %}
+    </tr>
+    {% endfor %}
 
 </table>
 
