@@ -1,67 +1,66 @@
+
 <!DOCTYPE html>
 <html>
 
 <head>
 
-    <!-- Page title -->
     <title>AI Insights</title>
 
 </head>
 
+
 <body>
 
-    <!-- Page heading -->
-    <h2>AI Insights</h2>
+<h1>AI Assessment Insights</h1>
 
-    <hr>
-
-
-    <!-- Candidate information -->
-    <h3>Candidate Information</h3>
-
-    <p>
-        <strong>Employee ID:</strong>
-        {{ attempt.employee.employee_id }}
-    </p>
-
-    <p>
-        <strong>Name:</strong>
-        {{ attempt.employee.name }}
-    </p>
-
-    <p>
-        <strong>Team:</strong>
-        {{ attempt.employee.team.team_name }}
-    </p>
+<hr>
 
 
-    <!-- Test information -->
-    <p>
-        <strong>Test:</strong>
-        {{ attempt.test.test_name }}
-    </p>
+<!-- Candidate information -->
+<h3>
+    Candidate:
+    {{ attempt.employee.name }}
+</h3>
 
-    <p>
-        <strong>Score:</strong>
-        {{ attempt.score }}
-    </p>
-
-    <p>
-        <strong>Percentage:</strong>
-        {{ "%.2f"|format(attempt.percentage or 0) }}%
-    </p>
-
-    <hr>
+<p>
+    Employee ID:
+    {{ attempt.employee.employee_id }}
+</p>
 
 
-    <!-- Number of incorrect answers -->
-    <h3>
-        Incorrect / Unanswered Questions:
-        {{ incorrect_answers|length }}
-    </h3>
+<!-- Test information -->
+<p>
+    Test:
+    {{ attempt.test.test_name }}
+</p>
 
 
-    <!-- Display each incorrect question -->
+<p>
+    Score:
+    {{ attempt.score }}
+</p>
+
+
+<p>
+    Percentage:
+    {{ "%.2f"|format(attempt.percentage) }}%
+</p>
+
+
+<hr>
+
+
+<!-- Number of incorrect answers -->
+<h2>
+    Incorrect Answers:
+    {{ incorrect_answers|length }}
+</h2>
+
+
+{% if incorrect_answers %}
+
+
+    <!-- Display each incorrect answer -->
     {% for item in incorrect_answers %}
 
         <hr>
@@ -70,6 +69,8 @@
             Question {{ item.question_number }}
         </h3>
 
+
+        <!-- Question -->
         <p>
 
             <strong>Question:</strong>
@@ -79,24 +80,23 @@
         </p>
 
 
+        <!-- Candidate's answer -->
         <p>
 
-            <strong>Status:</strong>
-
-            {{ item.status }}
-
-        </p>
-
-
-        <p>
-
-            <strong>Selected Answer:</strong>
+            <strong>Candidate Selected:</strong>
 
             {{ item.selected_answer }}
 
         </p>
 
+        <p>
 
+            {{ item.selected_text }}
+
+        </p>
+
+
+        <!-- Correct answer -->
         <p>
 
             <strong>Correct Answer:</strong>
@@ -105,7 +105,14 @@
 
         </p>
 
+        <p>
 
+            {{ item.correct_text }}
+
+        </p>
+
+
+        <!-- Marks -->
         <p>
 
             <strong>Marks:</strong>
@@ -115,58 +122,66 @@
         </p>
 
 
-        <!-- Placeholder for AI-generated explanation -->
-        <h4>AI Explanation</h4>
+        <hr>
+
+
+        <!-- Gemini AI insight -->
+        <h3>
+            🤖 AI Insight
+        </h3>
 
         <p>
-            AI analysis will appear here.
+
+            {{ item.ai_insight }}
+
         </p>
 
-
-        <!-- Placeholder for AI-generated solution -->
-        <h4>Suggested Fix</h4>
-
-        <p>
-            AI suggested solution will appear here.
-        </p>
 
     {% endfor %}
 
 
+{% else %}
+
+
     <!-- Message when there are no incorrect answers -->
-    {% if not incorrect_answers %}
+    <h3>
+        Excellent! No incorrect answers were found.
+    </h3>
 
-        <p>
-            Excellent! No incorrect answers were found.
-        </p>
-
-    {% endif %}
-
-
-    <hr>
+    <p>
+        Gemini analysis is not required because
+        the candidate answered every question correctly.
+    </p>
 
 
-    <!-- Return to individual results -->
-    <a href="{{ url_for('test.test_results') }}">
-
-        <button type="button">
-            Back to Individual Results
-        </button>
-
-    </a>
+{% endif %}
 
 
-    <br><br>
+<hr>
 
 
-    <!-- Return to dashboard -->
-    <a href="{{ url_for('auth.dashboard') }}">
+<!-- Return to individual results -->
+<a href="{{ url_for('test.test_results') }}">
 
-        <button type="button">
-            Back to Dashboard
-        </button>
+    <button type="button">
+        Back to Individual Results
+    </button>
 
-    </a>
+</a>
+
+
+<br><br>
+
+
+<!-- Return to admin dashboard -->
+<a href="{{ url_for('auth.dashboard') }}">
+
+    <button type="button">
+        Back to Dashboard
+    </button>
+
+</a>
+
 
 </body>
 

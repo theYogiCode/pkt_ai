@@ -45,6 +45,11 @@ from database.team import Team
 from database.test_attempt import TestAttempt
 from database.answer import Answer
 
+# Import both AI functions.
+from ai_service import (
+    generate_insight,
+    generate_overall_insight
+)
 
 test = Blueprint("test", __name__)
 
@@ -683,9 +688,9 @@ def create_team():
 
 # This route searches employees by employee ID or name.
 # It is used by the Start Test page for autocomplete.
+# Employees do not have a separate login, so this route must remain public.
 
 @test.route("/employees/search")
-@login_required
 def search_employees():
 
     # Get the text entered by the candidate.
@@ -739,6 +744,27 @@ def search_employees():
 
 # This route displays completed test results for the admin.
 # It shows employee, team, test, score and percentage.
+
+# This route displays the tests available to employees.
+# It does not require admin login because employees do not
+# have a separate login system in the current project.
+
+@test.route("/employee/tests")
+def employee_test_dashboard():
+
+    # Get all tests created in the system.
+    tests = (
+        Test.query
+        .order_by(Test.created_at.desc())
+        .all()
+    )
+
+    # Display the employee test dashboard.
+    return render_template(
+        "employee_test_dashboard.html",
+        tests=tests
+    )
+
 
 @test.route("/test-result")
 @login_required
@@ -849,6 +875,7 @@ def team_results():
         results=results
     )
 
+
 # This route analyzes the incorrect answers
 # for a specific completed test attempt.
 @test.route("/test-results/<int:attempt_id>/analyze")
@@ -865,7 +892,8 @@ def analyze_test_attempt(attempt_id):
         employee_id=attempt.id
     ).all()
 
-    # This list will contain incorrect answers.
+    # This list will contain incorrect answers
+    # together with their AI-generated insights.
     incorrect_answers = []
 
     # Check every submitted answer.
@@ -880,10 +908,64 @@ def analyze_test_attempt(attempt_id):
         if not question:
             continue
 
-        # Compare selected answer with correct answer.
+        # Compare the candidate's answer
+        # with the correct answer.
         if answer.selected_answer != question.correct_answer:
 
-            # Store the information needed for AI analysis.
+            # Convert the selected answer letter
+            # into the actual option text.
+            selected_text = ""
+
+            if answer.selected_answer == "A":
+                selected_text = question.option_a
+
+            elif answer.selected_answer == "B":
+                selected_text = question.option_b
+
+            elif answer.selected_answer == "C":
+                selected_text = question.option_c
+
+            elif answer.selected_answer == "D":
+                selected_text = question.option_d
+
+            else:
+                selected_text = "Not Answered"
+
+            # Convert the correct answer letter
+            # into the actual correct option text.
+            correct_text = ""
+
+            if question.correct_answer == "A":
+                correct_text = question.option_a
+
+            elif question.correct_answer == "B":
+                correct_text = question.option_b
+
+            elif question.correct_answer == "C":
+                correct_text = question.option_c
+
+            elif question.correct_answer == "D":
+                correct_text = question.option_d
+
+            # Send the question and answer information
+            # to Gemini for analysis.
+            ai_insight = generate_insight(
+
+                question=question.question_text,
+
+                selected_answer=(
+                    f"{answer.selected_answer}. "
+                    f"{selected_text}"
+                ),
+
+                correct_answer=(
+                    f"{question.correct_answer}. "
+                    f"{correct_text}"
+                )
+            )
+
+            # Store the incorrect answer and
+            # the AI-generated insight.
             incorrect_answers.append({
 
                 "question_number":
@@ -893,20 +975,31 @@ def analyze_test_attempt(attempt_id):
                     question.question_text,
 
                 "selected_answer":
-                    answer.selected_answer,
+                    answer.selected_answer
+                    if answer.selected_answer
+                    else "Not Answered",
+
+                "selected_text":
+                    selected_text,
 
                 "correct_answer":
                     question.correct_answer,
 
+                "correct_text":
+                    correct_text,
+
                 "marks":
-                    question.marks
+                    question.marks,
+
+                "ai_insight":
+                    ai_insight["insight"]
             })
 
-
-    # Return the analysis information as JSON for now.
+    # Return the complete analysis as JSON.
     return jsonify({
 
-        "attempt_id": attempt.id,
+        "attempt_id":
+            attempt.id,
 
         "employee_id":
             attempt.employee.employee_id,
@@ -924,6 +1017,7 @@ def analyze_test_attempt(attempt_id):
             incorrect_answers
     })
 
+
 # This route displays the AI Insights page
 # for a particular completed test attempt.
 @test.route("/test-results/<int:attempt_id>/insights")
@@ -931,9 +1025,7 @@ def analyze_test_attempt(attempt_id):
 def test_insights(attempt_id):
 
     # Find the completed test attempt.
-    attempt = TestAttempt.query.get_or_404(
-        attempt_id
-    )
+    attempt = TestAttempt.query.get_or_404(attempt_id)
 
     # Get all answers submitted for this attempt.
     answers = Answer.query.filter_by(
@@ -968,7 +1060,35 @@ def test_insights(attempt_id):
 
                 answer_status = "Incorrect"
 
-            # Store the information needed by the insights page.
+            # -----------------------------------------
+            # CALL GEMINI AI
+            # -----------------------------------------
+
+            try:
+
+                ai_result = generate_insight(
+                    question=question.question_text,
+                    selected_answer=answer.selected_answer
+                    if answer.selected_answer
+                    else "Not Answered",
+                    correct_answer=question.correct_answer
+                )
+
+                ai_insight = ai_result["insight"]
+
+            except Exception as e:
+
+                # Prevent the entire results page
+                # from crashing if Gemini has an error.
+                ai_insight = (
+                    "AI analysis could not be generated "
+                    "at this time."
+                )
+
+                print("Gemini AI Error:", e)
+
+            # Store the information needed
+            # by the insights page.
             incorrect_answers.append({
 
                 "question_number":
@@ -989,7 +1109,11 @@ def test_insights(attempt_id):
                     question.marks,
 
                 "status":
-                    answer_status
+                    answer_status,
+
+                # AI result added here
+                "ai_insight":
+                    ai_insight
             })
 
     # Display the AI Insights page.
@@ -998,6 +1122,132 @@ def test_insights(attempt_id):
         attempt=attempt,
         incorrect_answers=incorrect_answers
     )
+
+
+# This route generates an overall AI assessment
+# for all completed test attempts.
+@test.route("/ai-insights")
+@login_required
+def dashboard_ai_insights():
+
+    # Get all completed test attempts.
+    attempts = TestAttempt.query.filter_by(
+        status="Completed"
+    ).all()
+
+    # If there are no completed tests yet,
+    # there is nothing for Gemini to analyze.
+    if not attempts:
+
+        return render_template(
+            "dashboard_ai_insights.html",
+            has_data=False
+        )
+
+
+    # This list will contain the information
+    # that we send to Gemini.
+    assessment_data = []
+
+
+    # Process every completed attempt.
+    for attempt in attempts:
+
+        # Get all answers belonging to this attempt.
+        answers = Answer.query.filter_by(
+            employee_id=attempt.id
+        ).all()
+
+        # Store incorrect answers for this attempt.
+        incorrect_questions = []
+
+
+        # Check every answer.
+        for answer in answers:
+
+            # Find the question.
+            question = Question.query.get(
+                answer.question_id
+            )
+
+            # Skip if the question no longer exists.
+            if not question:
+                continue
+
+
+            # Check whether the answer was incorrect.
+            if answer.selected_answer != question.correct_answer:
+
+                incorrect_questions.append(
+                    question.question_text
+                )
+
+
+        # Add this candidate's performance
+        # to the overall assessment data.
+        assessment_data.append({
+
+            "employee_name":
+                attempt.employee.name,
+
+            "employee_id":
+                attempt.employee.employee_id,
+
+            "test_name":
+                attempt.test.test_name,
+
+            "score":
+                attempt.score,
+
+            "percentage":
+                attempt.percentage,
+
+            "incorrect_questions":
+                incorrect_questions
+        })
+
+
+    # Create the prompt that will be sent to Gemini.
+    prompt = f"""
+You are an assessment analyst.
+
+Analyze the following completed assessment data.
+
+Assessment data:
+{assessment_data}
+
+Provide an overall assessment containing:
+
+1. General performance summary.
+2. Common areas where candidates made mistakes.
+3. Important weaknesses that appear in the results.
+4. Practical recommendations for improvement.
+
+Keep the analysis clear, professional and concise.
+
+Do not invent information that is not present
+in the assessment data.
+"""
+
+
+    # Send the complete assessment data.
+    # to the dedicated overall-analysis function.
+    ai_response = generate_overall_insight(
+        assessment_data
+    )
+
+
+    # Display the AI-generated assessment.
+    return render_template(
+        "dashboard_ai_insights.html",
+
+        has_data=True,
+
+        attempts=attempts,
+
+        ai_insight=ai_response["insight"]
+    )
+
 
 
 # This route exports all completed individual test results
