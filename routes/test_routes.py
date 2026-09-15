@@ -60,6 +60,13 @@ def create_test():
 
     if request.method == "POST":
 
+        # Check whether the administrator selected that this test
+        # requires the shared visual during the assessment.
+        requires_screen_share = (
+        request.form.get("requires_screen_share") == "1"
+            )
+
+
         new_test = Test(
 
             test_name=request.form["test_name"],
@@ -67,6 +74,9 @@ def create_test():
             description=request.form["description"],
 
             duration=request.form["duration"],
+
+            requires_screen_share=requires_screen_share,
+
 
             created_by=current_user.id
 
@@ -1649,4 +1659,16 @@ def export_team_results_csv():
         as_attachment=True,
         download_name="team_test_results.csv",
         mimetype="text/csv"
+    )
+
+# This route opens the administrator's screen-sharing page.
+# Only authenticated administrators can access it.
+
+@test.route("/admin/screen-share")
+@login_required
+def admin_screen_share():
+
+    # Display the screen-sharing controls.
+    return render_template(
+        "admin_screen_share.html"
     )

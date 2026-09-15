@@ -1,54 +1,457 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Create Test</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - Create Test</title>
+
+
+    <!--
+        Load the common PKT AI stylesheet.
+
+        All visual styling is maintained separately in:
+        static/css/style.css
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
 </head>
+
 
 <body>
 
-<h2>Create New Test</h2>
 
-<form method="POST">
+<!-- =====================================================
+     TOP NAVIGATION
+     ===================================================== -->
 
-<label>Test Name</label>
+<header class="topbar">
 
-<br>
 
-<input
-type="text"
-name="test_name"
-required>
+    <div class="logo">
 
-<br><br>
+        <div class="logo-badge">
+            PK
+        </div>
 
-<label>Description</label>
+        <span>
+            PKT AI
+        </span>
 
-<br>
+    </div>
 
-<textarea
-name="description"></textarea>
 
-<br><br>
+    <div class="topbar-right">
 
-<label>Duration (Minutes)</label>
+        <span class="user-name">
+            Administrator Portal
+        </span>
 
-<br>
+    </div>
 
-<input
-type="number"
-name="duration"
-required>
 
-<br><br>
+</header>
 
-<button type="submit">
 
-Create Test
 
-</button>
+<!-- =====================================================
+     APPLICATION LAYOUT
+     ===================================================== -->
 
-</form>
+<div class="app-container">
+
+
+    <!-- =================================================
+         LEFT SIDEBAR
+         ================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-title">
+            Administration
+        </div>
+
+
+        <!-- Dashboard -->
+
+        <a href="/">
+
+            Dashboard
+
+        </a>
+
+
+        <!-- Create Test -->
+
+        <a href="/tests/create"
+           class="active">
+
+            Create Test
+
+        </a>
+
+
+        <!-- View Tests -->
+
+        <a href="/tests">
+
+            Tests
+
+        </a>
+
+
+
+        <div class="sidebar-title">
+
+            Management
+
+        </div>
+
+
+        <!-- Employee management is not implemented yet -->
+
+        <div class="nav-item disabled">
+
+            Employees
+
+        </div>
+
+
+        <!-- Reports -->
+
+        <a href="{{ url_for('test.test_results') }}">
+
+            Reports
+
+        </a>
+
+
+
+        <div class="sidebar-title">
+
+            Tools
+
+        </div>
+
+
+        <!-- Administrator Screen Share -->
+
+        <a href="{{ url_for('test.admin_screen_share') }}">
+
+            Screen Share
+
+        </a>
+
+
+        <!-- AI Insights -->
+
+        <a href="{{ url_for('test.dashboard_ai_insights') }}">
+
+            AI Insights
+
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="page-header">
+
+
+            <div>
+
+                <h1 class="page-title">
+
+                    Create New Test
+
+                </h1>
+
+
+                <div class="page-subtitle">
+
+                    Create an assessment for employees
+                    participating in the PKT AI evaluation.
+
+                </div>
+
+            </div>
+
+
+            <!-- Back to test list -->
+
+            <a href="/tests"
+               class="btn btn-secondary">
+
+                ← View Tests
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CREATE TEST FORM
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Test Details
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Enter the basic information for this assessment.
+
+            </p>
+
+
+            <br>
+
+
+
+            <form method="POST">
+
+
+                <!-- =================================================
+                     TEST NAME
+                     ================================================= -->
+
+                <div class="form-group">
+
+
+                    <label for="test_name">
+
+                        Test Name
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="test_name"
+                        name="test_name"
+                        class="form-control"
+                        placeholder="Enter test name"
+                        required
+                    >
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                     ================================================= -->
+
+                <div class="form-group">
+
+
+                    <label for="description">
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Enter a brief description of the test"
+                    ></textarea>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DURATION
+                     ================================================= -->
+
+                <div class="form-group">
+
+
+                    <label for="duration">
+
+                        Duration (Minutes)
+
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="duration"
+                        name="duration"
+                        class="form-control"
+                        placeholder="Example: 30"
+                        min="1"
+                        required
+                    >
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SCREEN SHARE OPTION
+                     ================================================= -->
+
+                <div class="form-group">
+
+
+                    <label>
+
+                        Assessment Configuration
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            name="requires_screen_share"
+                            value="1"
+                        >
+
+                        This test requires screen sharing
+
+                    </label>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     FORM ACTIONS
+                     ================================================= -->
+
+                <div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Create Test
+
+                    </button>
+
+
+                    <a
+                        href="/tests"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             INFORMATION CARD
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Assessment Workflow
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                After creating the test, you can add the
+                questions associated with the assessment.
+
+            </p>
+
+
+            <br>
+
+
+            <span class="badge badge-info">
+
+                Next Step
+
+            </span>
+
+
+            <p class="page-subtitle">
+
+                Create the test first, then open it from
+                the Tests page to continue configuring
+                the assessment.
+
+            </p>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="footer">
+
+            PKT AI • Intelligent Assessment Platform
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
 

@@ -21,6 +21,49 @@
         Select a test below to begin your assessment.
     </p>
 
+    <!-- This section lets an employee see whether the administrator
+     is currently sharing a screen and optionally join the share. -->
+
+<div id="screenShareSection">
+
+    <h3>Admin Screen Share</h3>
+
+    <p id="screenShareStatus">
+        Checking screen-sharing status...
+    </p>
+
+    <button
+        id="joinScreenShareButton"
+        type="button"
+        style="display: none;"
+    >
+        Join Screen Share
+    </button>
+
+    <br><br>
+
+    <video
+        id="remoteScreen"
+        autoplay
+        playsinline
+        width="800"
+        style="display: none;"
+    ></video>
+
+    <br>
+
+    <button
+        id="leaveScreenShareButton"
+        type="button"
+        style="display: none;"
+    >
+        Leave Screen Share
+    </button>
+
+</div>
+
+<hr>
+
     <hr>
 
 
@@ -48,6 +91,25 @@
                     Questions:
                     {{ test.questions|length }}
                 </p>
+
+                <!-- Tell the employee whether this test requires
+                the administrator's shared visual. -->
+
+                {% if test.requires_screen_share %}
+
+                <p>
+                    <strong>Visual Required:</strong>
+                        Yes
+                </p>
+
+                {% else %}
+
+                <p>
+                    <strong>Visual Required:</strong>
+                        No
+                </p>
+
+                {% endif %}
 
 
                 <a
@@ -77,6 +139,300 @@
 
     {% endif %}
 
+
+    <!-- This JavaScript connects the employee to the administrator's
+     shared screen using WebRTC. It never requests the employee's
+     camera or microphone. -->
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+<script>
+
+    // Connect the employee browser to Flask-SocketIO.
+    const socket = io();
+
+
+    // Get the screen-sharing controls.
+    const screenShareStatus =
+        document.getElementById("screenShareStatus");
+
+    const joinScreenShareButton =
+        document.getElementById("joinScreenShareButton");
+
+    const leaveScreenShareButton =
+        document.getElementById("leaveScreenShareButton");
+
+    const remoteScreen =
+        document.getElementById("remoteScreen");
+
+
+    // Store the WebRTC connection.
+    let peerConnection = null;
+
+
+    // Store the administrator's SocketIO ID.
+    let adminSid = null;
+
+
+    // Ask the server whether screen sharing
+    // is currently active.
+    socket.emit(
+        "check_screen_share"
+    );
+
+
+    // Receive the current screen-sharing status.
+    socket.on(
+        "screen_share_status",
+        function (data) {
+
+            if (data.active) {
+
+                screenShareStatus.textContent =
+                    "Admin screen share is available.";
+
+                joinScreenShareButton.style.display =
+                    "inline-block";
+
+            }
+            else {
+
+                screenShareStatus.textContent =
+                    "Admin is not currently sharing a screen.";
+
+                joinScreenShareButton.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    // Administrator starts screen sharing after
+    // the employee has already opened this page.
+    socket.on(
+        "screen_share_started",
+        function () {
+
+            screenShareStatus.textContent =
+                "Admin screen share is available.";
+
+            joinScreenShareButton.style.display =
+                "inline-block";
+
+        }
+    );
+
+
+    // Administrator stops screen sharing.
+    socket.on(
+        "screen_share_stopped",
+        function () {
+
+            screenShareStatus.textContent =
+                "Admin screen share has ended.";
+
+            joinScreenShareButton.style.display =
+                "none";
+
+
+            leaveScreenShare();
+
+
+        }
+    );
+
+
+    // Employee chooses to join the screen share.
+    joinScreenShareButton.addEventListener(
+        "click",
+        function () {
+
+            socket.emit(
+                "join_screen_share"
+            );
+
+
+            screenShareStatus.textContent =
+                "Connecting to admin screen...";
+
+            joinScreenShareButton.style.display =
+                "none";
+
+        }
+    );
+
+
+    // Create the WebRTC connection.
+    function createPeerConnection() {
+
+        peerConnection =
+            new RTCPeerConnection(
+                {
+                    iceServers: [
+                        {
+                            urls:
+                                "stun:stun.l.google.com:19302"
+                        }
+                    ]
+                }
+            );
+
+
+        // Receive the administrator's screen stream.
+        peerConnection.ontrack =
+            function (event) {
+
+                remoteScreen.srcObject =
+                    event.streams[0];
+
+                remoteScreen.style.display =
+                    "block";
+
+                leaveScreenShareButton.style.display =
+                    "inline-block";
+
+                screenShareStatus.textContent =
+                    "You are viewing the admin's shared screen.";
+
+            };
+
+
+        // Send ICE candidates to the administrator.
+        peerConnection.onicecandidate =
+            function (event) {
+
+                if (event.candidate && adminSid) {
+
+                    socket.emit(
+                        "ice_candidate",
+                        {
+                            target: adminSid,
+                            candidate: event.candidate
+                        }
+                    );
+
+                }
+
+            };
+
+
+        return peerConnection;
+
+    }
+
+
+    // Receive the WebRTC offer from the administrator.
+    socket.on(
+        "offer",
+        async function (data) {
+
+            adminSid =
+                data.admin_sid;
+
+
+            // Create our WebRTC connection.
+            createPeerConnection();
+
+
+            // Set the administrator's offer.
+            await peerConnection.setRemoteDescription(
+                data.offer
+            );
+
+
+            // Create an answer.
+            const answer =
+                await peerConnection.createAnswer();
+
+
+            await peerConnection.setLocalDescription(
+                answer
+            );
+
+
+            // Send the answer back to the administrator.
+            socket.emit(
+                "answer",
+                {
+                    target: adminSid,
+                    answer: peerConnection.localDescription
+                }
+            );
+
+        }
+    );
+
+
+    // Receive ICE candidates from the administrator.
+    socket.on(
+        "ice_candidate",
+        async function (data) {
+
+            if (!peerConnection) {
+                return;
+            }
+
+
+            try {
+
+                await peerConnection.addIceCandidate(
+                    data.candidate
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Failed to add ICE candidate:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+    // Employee leaves the screen share.
+    leaveScreenShareButton.addEventListener(
+        "click",
+        leaveScreenShare
+    );
+
+
+    function leaveScreenShare() {
+
+        // Close the WebRTC connection.
+        if (peerConnection) {
+
+            peerConnection.close();
+
+            peerConnection = null;
+
+        }
+
+
+        // Remove the shared screen.
+        remoteScreen.srcObject = null;
+
+        remoteScreen.style.display =
+            "none";
+
+        leaveScreenShareButton.style.display =
+            "none";
+
+
+        // The employee can join again if
+        // screen sharing is still active.
+        socket.emit(
+            "check_screen_share"
+        );
+
+    }
+
+</script>
 
 </body>
 

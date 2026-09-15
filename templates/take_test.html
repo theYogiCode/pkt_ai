@@ -1,194 +1,607 @@
+<!-- This template displays the employee test interface.
+     Visual tests show the admin's shared screen beside the question. -->
+
 <!DOCTYPE html>
 <html>
 
 <head>
 
-    <title>Take Test</title>
+    <title>PKT AI - Take Test</title>
+
+    <!-- Load the common PKT AI stylesheet. -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
 
 </head>
 
+
 <body>
 
-    <!-- Candidate information -->
-    <h3>
-        Candidate:
-        {{ session.get("candidate_name") }}
-    </h3>
+    <!-- Main test container. -->
+    <div class="test-container">
 
-    <p>
-        Candidate ID:
-        {{ session.get("candidate_id") }}
-    </p>
 
-    <hr>
+        <!-- Test header. -->
+        <div class="test-header">
 
-    <!-- Test information -->
-    <h2>
-        {{ test.test_name }}
-    </h2>
+            <h2>
+                {{ test.test_name }}
+            </h2>
 
-    <h3>
-        Question {{ question_number }}
-        of
-        {{ total_questions }}
-    </h3>
+            <p>
+                Candidate:
+                {{ session.get("candidate_name") }}
+                |
+                Candidate ID:
+                {{ session.get("candidate_id") }}
+            </p>
 
-    <hr>
+        </div>
 
 
-    <!-- Current question -->
-    <h3>
-        {{ question.question_text }}
-    </h3>
 
+        <!-- =====================================================
+             TEST CONTENT
+             ===================================================== -->
 
-    <!--
-        The candidate submits the selected answer
-        using the POST method.
-    -->
-    <form method="POST">
+        <div
+            class="
+                test-workspace
+                {% if test.requires_screen_share %}
+                    with-screen-share
+                {% endif %}
+            "
+        >
 
 
-        <!-- Option A -->
+            <!-- =================================================
+                 ADMIN SHARED VISUAL
+                 ================================================= -->
 
-        <p>
+            {% if test.requires_screen_share %}
 
-            <label>
+                <div class="screen-share-card">
 
-                <input
-                    type="radio"
-                    name="answer"
-                    value="A"
-                    {% if selected_answer == "A" %}
-                        checked
-                    {% endif %}
-                    required>
+                    <div class="screen-share-header">
 
-                A. {{ question.option_a }}
+                        <h3>
+                            Admin Shared Visual
+                        </h3>
 
-            </label>
+                        <span
+                            id="testScreenShareStatus"
+                            class="screen-share-status"
+                        >
+                            Checking availability...
+                        </span>
 
-        </p>
+                    </div>
 
 
-        <!-- Option B -->
+                    <div class="screen-share-content">
 
-        <p>
+                        <video
+                            id="testRemoteScreen"
+                            class="shared-screen"
+                            autoplay
+                            playsinline
+                        ></video>
 
-            <label>
 
-                <input
-                    type="radio"
-                    name="answer"
-                    value="B"
-                    {% if selected_answer == "B" %}
-                        checked
-                    {% endif %}
-                    required>
+                        <p
+                            id="screenSharePlaceholder"
+                            class="screen-share-placeholder"
+                        >
+                            Waiting for the administrator's shared visual...
+                        </p>
 
-                B. {{ question.option_b }}
+                    </div>
 
-            </label>
+                </div>
 
-        </p>
+            {% endif %}
 
 
-        <!-- Option C -->
 
-        <p>
+            <!-- =================================================
+                 QUESTION AREA
+                 ================================================= -->
 
-            <label>
+            <div class="question-card">
 
-                <input
-                    type="radio"
-                    name="answer"
-                    value="C"
-                    {% if selected_answer == "C" %}
-                        checked
-                    {% endif %}
-                    required>
 
-                C. {{ question.option_c }}
+                <!-- Question progress. -->
+                <div class="question-progress">
 
-            </label>
+                    Question
+                    {{ question_number }}
+                    of
+                    {{ total_questions }}
 
-        </p>
+                </div>
 
 
-        <!-- Option D -->
+                <!-- Question text. -->
+                <h3 class="question-text">
 
-        <p>
+                    {{ question.question_text }}
 
-            <label>
+                </h3>
 
-                <input
-                    type="radio"
-                    name="answer"
-                    value="D"
-                    {% if selected_answer == "D" %}
-                        checked
-                    {% endif %}
-                    required>
 
-                D. {{ question.option_d }}
 
-            </label>
+                <!-- Answer form. -->
+                <form method="POST">
 
-        </p>
 
+                    <!-- Option A -->
+                    <label class="option">
 
-        <br>
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="A"
+                            {% if selected_answer == "A" %}
+                                checked
+                            {% endif %}
+                            required
+                        >
 
+                        <span>
+                            <strong>A.</strong>
+                            {{ question.option_a }}
+                        </span>
 
-        <!-- Previous button -->
+                    </label>
 
-        {% if question_number > 1 %}
 
-            <button
-                type="submit"
-                name="navigation"
-                value="previous">
 
-                Previous
+                    <!-- Option B -->
+                    <label class="option">
 
-            </button>
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="B"
+                            {% if selected_answer == "B" %}
+                                checked
+                            {% endif %}
+                            required
+                        >
 
-        {% endif %}
+                        <span>
+                            <strong>B.</strong>
+                            {{ question.option_b }}
+                        </span>
 
+                    </label>
 
-        <!-- Next button -->
 
-        {% if question_number < total_questions %}
 
-            <button
-                type="submit"
-                name="navigation"
-                value="next">
+                    <!-- Option C -->
+                    <label class="option">
 
-                Next
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="C"
+                            {% if selected_answer == "C" %}
+                                checked
+                            {% endif %}
+                            required
+                        >
 
-            </button>
+                        <span>
+                            <strong>C.</strong>
+                            {{ question.option_c }}
+                        </span>
 
-        {% endif %}
+                    </label>
 
 
-        <!-- Submit button on the last question -->
 
-        {% if question_number == total_questions %}
+                    <!-- Option D -->
+                    <label class="option">
 
-            <button
-                type="submit"
-                name="navigation"
-                value="submit">
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="D"
+                            {% if selected_answer == "D" %}
+                                checked
+                            {% endif %}
+                            required
+                        >
 
-                Submit Test
+                        <span>
+                            <strong>D.</strong>
+                            {{ question.option_d }}
+                        </span>
 
-            </button>
+                    </label>
 
-        {% endif %}
 
 
-    </form>
+                    <!-- Navigation buttons. -->
+                    <div class="test-navigation">
+
+
+                        <!-- Previous button. -->
+                        {% if question_number > 1 %}
+
+                            <button
+                                type="submit"
+                                name="navigation"
+                                value="previous"
+                                class="btn btn-secondary"
+                            >
+                                Previous
+                            </button>
+
+                        {% endif %}
+
+
+
+                        <div class="navigation-right">
+
+                            <!-- Next button. -->
+                            {% if question_number < total_questions %}
+
+                                <button
+                                    type="submit"
+                                    name="navigation"
+                                    value="next"
+                                    class="btn btn-primary"
+                                >
+                                    Next
+                                </button>
+
+                            {% endif %}
+
+
+
+                            <!-- Submit button. -->
+                            {% if question_number == total_questions %}
+
+                                <button
+                                    type="submit"
+                                    name="navigation"
+                                    value="submit"
+                                    class="btn btn-success"
+                                >
+                                    Submit Test
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         SCREEN SHARING JAVASCRIPT
+         ========================================================= -->
+
+    {% if test.requires_screen_share %}
+
+        <!-- Load Socket.IO for WebRTC signaling. -->
+        <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+
+        <script>
+
+            // Connect this test page to the Flask-SocketIO server.
+            const testSocket = io();
+
+
+            // Get the screen-sharing status element.
+            const testScreenShareStatus =
+                document.getElementById(
+                    "testScreenShareStatus"
+                );
+
+
+            // Get the employee's shared-screen video element.
+            const testRemoteScreen =
+                document.getElementById(
+                    "testRemoteScreen"
+                );
+
+
+            // Get the placeholder displayed while waiting
+            // for the administrator's screen.
+            const screenSharePlaceholder =
+                document.getElementById(
+                    "screenSharePlaceholder"
+                );
+
+
+            // Store the WebRTC connection.
+            let testPeerConnection = null;
+
+
+            // Store the administrator's Socket.IO ID.
+            let testAdminSid = null;
+
+
+
+            // -----------------------------------------------------
+            // Check whether the administrator is currently sharing.
+            // -----------------------------------------------------
+
+            testSocket.emit(
+                "check_screen_share"
+            );
+
+
+
+            // -----------------------------------------------------
+            // Receive the current screen-sharing status.
+            //
+            // If sharing is active, automatically join.
+            // -----------------------------------------------------
+
+            testSocket.on(
+                "screen_share_status",
+                function(data) {
+
+                    if (data.active) {
+
+                        testScreenShareStatus.textContent =
+                            "Connecting to admin visual...";
+
+
+                        testSocket.emit(
+                            "join_screen_share"
+                        );
+
+                    }
+                    else {
+
+                        testScreenShareStatus.textContent =
+                            "Admin visual is currently unavailable.";
+
+                    }
+
+                }
+            );
+
+
+
+            // -----------------------------------------------------
+            // Admin starts sharing while employee is already
+            // on the test page.
+            // -----------------------------------------------------
+
+            testSocket.on(
+                "screen_share_started",
+                function() {
+
+                    testScreenShareStatus.textContent =
+                        "Connecting to admin visual...";
+
+
+                    testSocket.emit(
+                        "join_screen_share"
+                    );
+
+                }
+            );
+
+
+
+            // -----------------------------------------------------
+            // Create WebRTC connection.
+            // -----------------------------------------------------
+
+            function createTestPeerConnection() {
+
+                testPeerConnection =
+                    new RTCPeerConnection(
+                        {
+                            iceServers: [
+                                {
+                                    urls:
+                                        "stun:stun.l.google.com:19302"
+                                }
+                            ]
+                        }
+                    );
+
+
+                // Receive the administrator's shared screen.
+                testPeerConnection.ontrack =
+                    function(event) {
+
+                        testRemoteScreen.srcObject =
+                            event.streams[0];
+
+
+                        testRemoteScreen.style.display =
+                            "block";
+
+
+                        screenSharePlaceholder.style.display =
+                            "none";
+
+
+                        testScreenShareStatus.textContent =
+                            "Viewing admin visual.";
+
+                    };
+
+
+                // Send ICE candidates to the administrator.
+                testPeerConnection.onicecandidate =
+                    function(event) {
+
+                        if (
+                            event.candidate &&
+                            testAdminSid
+                        ) {
+
+                            testSocket.emit(
+                                "ice_candidate",
+                                {
+                                    target: testAdminSid,
+                                    candidate: event.candidate
+                                }
+                            );
+
+                        }
+
+                    };
+
+
+                return testPeerConnection;
+
+            }
+
+
+
+            // -----------------------------------------------------
+            // Receive WebRTC offer from administrator.
+            // -----------------------------------------------------
+
+            testSocket.on(
+                "offer",
+                async function(data) {
+
+                    testAdminSid =
+                        data.admin_sid;
+
+
+                    // Close an old connection if one exists.
+                    if (testPeerConnection) {
+
+                        testPeerConnection.close();
+
+                    }
+
+
+                    // Create a fresh WebRTC connection.
+                    createTestPeerConnection();
+
+
+                    // Apply the administrator's offer.
+                    await testPeerConnection.setRemoteDescription(
+                        data.offer
+                    );
+
+
+                    // Create an answer.
+                    const answer =
+                        await testPeerConnection.createAnswer();
+
+
+                    await testPeerConnection.setLocalDescription(
+                        answer
+                    );
+
+
+                    // Send the answer back to the administrator.
+                    testSocket.emit(
+                        "answer",
+                        {
+                            target: testAdminSid,
+                            answer:
+                                testPeerConnection.localDescription
+                        }
+                    );
+
+                }
+            );
+
+
+
+            // -----------------------------------------------------
+            // Receive ICE candidates.
+            // -----------------------------------------------------
+
+            testSocket.on(
+                "ice_candidate",
+                async function(data) {
+
+                    if (!testPeerConnection) {
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        await testPeerConnection.addIceCandidate(
+                            data.candidate
+                        );
+
+                    }
+                    catch(error) {
+
+                        console.error(
+                            "Unable to add ICE candidate:",
+                            error
+                        );
+
+                    }
+
+                }
+            );
+
+
+
+            // -----------------------------------------------------
+            // Admin stops screen sharing.
+            // -----------------------------------------------------
+
+            testSocket.on(
+                "screen_share_stopped",
+                function() {
+
+                    testScreenShareStatus.textContent =
+                        "Admin visual has ended.";
+
+
+                    if (testPeerConnection) {
+
+                        testPeerConnection.close();
+
+                        testPeerConnection = null;
+
+                    }
+
+
+                    testRemoteScreen.srcObject =
+                        null;
+
+
+                    testRemoteScreen.style.display =
+                        "none";
+
+
+                    screenSharePlaceholder.style.display =
+                        "block";
+
+                }
+            );
+
+        </script>
+
+    {% endif %}
+
 
 </body>
 

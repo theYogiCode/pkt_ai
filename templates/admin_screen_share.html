@@ -1,0 +1,373 @@
+<!-- This page allows the administrator to start and stop
+     sharing the administrator's screen. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>PKT AI - Screen Share</title>
+
+</head>
+
+<body>
+
+    <h2>PKT AI - Admin Screen Share</h2>
+
+    <p>
+        Use this page to share your screen with employees.
+    </p>
+
+    <hr>
+
+    <button
+        id="startShareButton"
+        type="button"
+    >
+        Start Screen Share
+    </button>
+
+    <button
+        id="stopShareButton"
+        type="button"
+        disabled
+    >
+        Stop Screen Share
+    </button>
+
+    <p id="status">
+        Screen sharing is not active.
+    </p>
+
+    <br>
+
+    <video
+        id="localScreen"
+        autoplay
+        playsinline
+        muted
+        width="800"
+    ></video>
+
+
+    <!-- Socket.IO client library. -->
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+
+    <script>
+
+        // Connect this browser to the Flask-SocketIO server.
+        const socket = io();
+
+
+        // Get references to the page elements.
+        const startButton =
+            document.getElementById("startShareButton");
+
+        const stopButton =
+            document.getElementById("stopShareButton");
+
+        const status =
+            document.getElementById("status");
+
+        const localScreen =
+            document.getElementById("localScreen");
+
+
+        // Store the screen capture stream.
+        let screenStream = null;
+
+
+        // Store WebRTC connections for employees.
+        const peerConnections = {};
+
+
+        // Start screen sharing.
+        startButton.addEventListener(
+            "click",
+            async function () {
+
+                try {
+
+                    // Ask the administrator to select
+                    // a screen or application window.
+                    screenStream =
+                        await navigator.mediaDevices.getDisplayMedia(
+                            {
+                                video: true,
+                                audio: false
+                            }
+                        );
+
+
+                    // Display the shared screen locally
+                    // so the administrator can see what
+                    // is being shared.
+                    localScreen.srcObject =
+                        screenStream;
+
+
+                    // Tell the server that sharing started.
+                    socket.emit(
+                        "start_screen_share"
+                    );
+
+
+                    status.textContent =
+                        "Screen sharing is active.";
+
+
+                    startButton.disabled = true;
+
+                    stopButton.disabled = false;
+
+
+                    // Detect when the administrator manually
+                    // stops sharing using the browser's
+                    // screen-sharing control.
+                    screenStream
+                        .getVideoTracks()[0]
+                        .addEventListener(
+                            "ended",
+                            stopScreenShare
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Screen sharing failed:",
+                        error
+                    );
+
+                    status.textContent =
+                        "Screen sharing was cancelled or unavailable.";
+
+                }
+
+            }
+        );
+
+
+        // Stop screen sharing.
+        stopButton.addEventListener(
+            "click",
+            stopScreenShare
+        );
+
+
+        function stopScreenShare() {
+
+            // Stop every screen-capture track.
+            if (screenStream) {
+
+                screenStream
+                    .getTracks()
+                    .forEach(
+                        function (track) {
+                            track.stop();
+                        }
+                    );
+
+                screenStream = null;
+
+            }
+
+
+            // Remove the local preview.
+            localScreen.srcObject = null;
+
+
+            // Close all employee connections.
+            Object.values(peerConnections)
+                .forEach(
+                    function (connection) {
+                        connection.close();
+                    }
+                );
+
+
+            // Clear the connection list.
+            Object.keys(peerConnections)
+                .forEach(
+                    function (key) {
+                        delete peerConnections[key];
+                    }
+                );
+
+
+            // Inform the server.
+            socket.emit(
+                "stop_screen_share"
+            );
+
+
+            status.textContent =
+                "Screen sharing is not active.";
+
+
+            startButton.disabled = false;
+
+            stopButton.disabled = true;
+
+        }
+
+
+        // An employee has joined the screen share.
+        socket.on(
+            "viewer_joined",
+            async function (data) {
+
+                const viewerSid =
+                    data.viewer_sid;
+
+
+                // Create a WebRTC connection
+                // specifically for this employee.
+                const peerConnection =
+                    createPeerConnection(
+                        viewerSid
+                    );
+
+
+                peerConnections[viewerSid] =
+                    peerConnection;
+
+
+                // Add the administrator's screen
+                // video track to the connection.
+                screenStream
+                    .getTracks()
+                    .forEach(
+                        function (track) {
+
+                            peerConnection.addTrack(
+                                track,
+                                screenStream
+                            );
+
+                        }
+                    );
+
+
+                // Create the WebRTC offer.
+                const offer =
+                    await peerConnection.createOffer();
+
+
+                await peerConnection.setLocalDescription(
+                    offer
+                );
+
+
+                // Send the offer to the employee
+                // through the signaling server.
+                socket.emit(
+                    "offer",
+                    {
+                        target: viewerSid,
+                        offer: peerConnection.localDescription
+                    }
+                );
+
+            }
+        );
+
+
+        // Create a WebRTC connection.
+        function createPeerConnection(
+            targetSid
+        ) {
+
+            const peerConnection =
+                new RTCPeerConnection(
+                    {
+                        iceServers: [
+                            {
+                                urls:
+                                    "stun:stun.l.google.com:19302"
+                            }
+                        ]
+                    }
+                );
+
+
+            // Send ICE candidates to the employee.
+            peerConnection.onicecandidate =
+                function (event) {
+
+                    if (event.candidate) {
+
+                        socket.emit(
+                            "ice_candidate",
+                            {
+                                target: targetSid,
+                                candidate: event.candidate
+                            }
+                        );
+
+                    }
+
+                };
+
+
+            return peerConnection;
+
+        }
+
+
+        // Receive the WebRTC answer from the employee.
+        socket.on(
+            "answer",
+            async function (data) {
+
+                const viewerSid =
+                    data.viewer_sid;
+
+                const peerConnection =
+                    peerConnections[viewerSid];
+
+
+                if (!peerConnection) {
+                    return;
+                }
+
+
+                await peerConnection.setRemoteDescription(
+                    data.answer
+                );
+
+            }
+        );
+
+
+        // Receive ICE candidates from the employee.
+        socket.on(
+            "ice_candidate",
+            async function (data) {
+
+                const viewerSid =
+                    data.sender_sid;
+
+                const peerConnection =
+                    peerConnections[viewerSid];
+
+
+                if (!peerConnection) {
+                    return;
+                }
+
+
+                await peerConnection.addIceCandidate(
+                    data.candidate
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

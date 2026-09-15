@@ -1,85 +1,552 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>PKT AI - Admin Dashboard</title>
+
+    <!--
+        Load the common PKT AI stylesheet.
+
+        All visual styling is maintained separately in:
+        static/css/style.css
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
 </head>
+
 
 <body>
 
-<h1>PKT AI Admin Dashboard</h1>
 
-<hr>
+<!-- =====================================================
+     TOP NAVIGATION
+     ===================================================== -->
 
-<h3>Test Management</h3>
+<header class="topbar">
 
-<!-- Create a new test -->
-<a href="/tests/create">
-    <button type="button">
-        Create New Test
-    </button>
-</a>
+    <div class="logo">
 
-<br><br>
+        <div class="logo-badge">
+            PK
+        </div>
 
-<!-- View existing tests -->
-<a href="/tests">
-    <button type="button">
-        View Tests
-    </button>
-</a>
+        <span>
+            PKT AI
+        </span>
 
-<hr>
-
-<h3>Candidate Management</h3>
-
-<!-- Employee management will be implemented later -->
-<button disabled>
-    Employees
-</button>
-
-<hr>
-
-<h3>Reports</h3>
-
-<!-- Open individual candidate results -->
-<a href="{{ url_for('test.test_results') }}">
-    <button type="button">
-        Individual Results
-    </button>
-</a>
-
-<br><br>
-
-<!-- Open team-wise results -->
-<a href="{{ url_for('test.team_results') }}">
-    <button type="button">
-        Team Results
-    </button>
-</a>
-
-<hr>
-
-<h3>Screen Share</h3>
-
-<!-- Screen sharing will be implemented later -->
-<button disabled>
-    Start Screen Share
-</button>
-
-<hr>
-
-<h3>AI Insights</h3>
+    </div>
 
 
-<!-- Open the overall AI Insights page. -->
-<a href="{{ url_for('test.dashboard_ai_insights') }}">
+    <div class="topbar-right">
 
-    <button type="button">
-        Generate Insights
-    </button>
+        <span class="user-name">
+            Administrator Portal
+        </span>
 
-</a>
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     APPLICATION LAYOUT
+     ===================================================== -->
+
+<div class="app-container">
+
+
+    <!-- =================================================
+         LEFT SIDEBAR
+         ================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-title">
+            Administration
+        </div>
+
+
+        <!-- Dashboard -->
+
+        <a href="#"
+           class="active">
+
+            Dashboard
+
+        </a>
+
+
+        <!-- Create Test -->
+
+        <a href="/tests/create">
+
+            Create Test
+
+        </a>
+
+
+        <!-- View Tests -->
+
+        <a href="/tests">
+
+            Tests
+
+        </a>
+
+
+
+        <div class="sidebar-title">
+
+            Management
+
+        </div>
+
+
+        <!-- Employee management will be implemented later -->
+
+        <div class="nav-item disabled">
+
+            Employees
+
+        </div>
+
+
+    <!-- Reports -->
+
+        <a href="{{ url_for('test.test_results') }}">
+
+             Reports
+
+        </a>
+
+
+        <div class="sidebar-title">
+
+            Tools
+
+        </div>
+
+
+        <!-- Administrator Screen Share -->
+
+        <a href="{{ url_for('test.admin_screen_share') }}">
+
+            Screen Share
+
+        </a>
+
+
+        <!-- AI Insights -->
+
+        <a href="{{ url_for('test.dashboard_ai_insights') }}">
+
+            AI Insights
+
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="page-header">
+
+
+            <div>
+
+                <h1 class="page-title">
+
+                    Admin Dashboard
+
+                </h1>
+
+
+                <div class="page-subtitle">
+
+                    Manage assessments, results,
+                    screen sharing and AI insights.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Primary dashboard action -->
+
+            <a href="/tests/create"
+               class="btn btn-primary">
+
+                + Create New Test
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             DASHBOARD STATISTICS
+             
+             These values are placeholders for now.
+             We can connect them to database counts later.
+             ================================================= -->
+
+        <div class="stats-grid">
+
+
+            <!-- Total Tests -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    Total Tests
+
+                </div>
+
+
+                <div class="stat-value">
+
+                    —
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Employees -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    Employees
+
+                </div>
+
+
+                <div class="stat-value">
+
+                    —
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Assessments -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    Assessments
+
+                </div>
+
+
+                <div class="stat-value">
+
+                    —
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AI Insights -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    AI Insights
+
+                </div>
+
+
+                <div class="stat-value">
+
+                    —
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             TEST MANAGEMENT
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Test Management
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Create and manage employee assessments.
+
+            </p>
+
+
+            <br>
+
+
+            <a href="/tests/create"
+               class="btn btn-primary">
+
+                Create New Test
+
+            </a>
+
+
+            <a href="/tests"
+               class="btn btn-secondary">
+
+                View Tests
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CANDIDATE MANAGEMENT
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Candidate Management
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Manage employees participating
+                in assessments.
+
+            </p>
+
+
+            <br>
+
+
+            <!--
+                Employee functionality is not implemented yet.
+            -->
+
+            <button
+                class="btn btn-secondary"
+                disabled>
+
+                Employees
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             REPORTS
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Reports & Results
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Review individual and team
+                assessment performance.
+
+            </p>
+
+
+            <br>
+
+
+            <!-- Individual candidate results -->
+
+            <a
+                href="{{ url_for('test.test_results') }}"
+                class="btn btn-primary">
+
+                Individual Results
+
+            </a>
+
+
+            <!-- Team-wise results -->
+
+            <a
+                href="{{ url_for('test.team_results') }}"
+                class="btn btn-secondary">
+
+                Team Results
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             SCREEN SHARE
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                Screen Share
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Start the administrator screen-sharing
+                session for visual-based assessments.
+
+            </p>
+
+
+            <br>
+
+
+            <a
+                href="{{ url_for('test.admin_screen_share') }}"
+                class="btn btn-primary">
+
+                Start Screen Share
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             AI INSIGHTS
+             ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+
+                AI Insights
+
+            </h2>
+
+
+            <p class="page-subtitle">
+
+                Generate AI-powered analysis of
+                incorrect employee answers and
+                identify improvement areas.
+
+            </p>
+
+
+            <br>
+
+
+            <span class="badge badge-info">
+
+                AI Enabled
+
+            </span>
+
+
+            <br>
+            <br>
+
+
+            <a
+                href="{{ url_for('test.dashboard_ai_insights') }}"
+                class="btn btn-primary">
+
+                Generate Insights
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="footer">
+
+            PKT AI • Intelligent Assessment Platform
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
 
