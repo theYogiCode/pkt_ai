@@ -11,6 +11,8 @@ from routes.auth import auth
 from routes.login_manager import login_manager
 from routes.test_routes import test
 
+from flask import render_template
+
 from flask_socketio import SocketIO
 
 # Import the screen-sharing handlers so that
@@ -47,13 +49,15 @@ register_screen_share_events(socketio)
 app.register_blueprint(test)
 app.register_blueprint(auth)
 
+# Public home page for PKT AI.
+# This page is accessible without admin authentication.
 
 @app.route("/")
 def home():
 
-    return "<h2>PKT AI Tool is Running 🚀</h2>"
-
-
+    return render_template(
+        "index.html"
+    )
 if __name__ == "__main__":
 
     # Create database tables if they do not already exist.
