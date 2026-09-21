@@ -1,124 +1,275 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Start Test</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Start Test - PKT AI</title>
+
+    <!-- Use the existing common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Keep candidate fields compact on this page only -->
+    <style>
+        .candidate-form .form-control {
+            max-width: 550px;
+        }
+    </style>
 
 </head>
 
+
 <body>
 
-    <!-- Display the selected test -->
-    <h2>{{ test.test_name }}</h2>
 
-    <p>
-        Duration: {{ test.duration }} Minutes
-    </p>
+    <!-- =========================================================
+         TOP NAVIGATION
+         ========================================================= -->
+    <header class="topbar">
 
-    <p>
-        Total Questions: {{ test.total_questions }}
-    </p>
+        <div class="logo">
 
-    <hr>
+            <div class="logo-badge">
+                PK
+            </div>
 
-    <h3>Candidate Details</h3>
+            <span>
+                PKT AI
+            </span>
 
-
-    <!-- Candidate information form -->
-
-    <form method="POST">
-
-
-        <!-- Employee ID -->
-
-        <label>
-            Employee ID:
-        </label>
-
-        <br>
-
-        <input
-            type="text"
-            id="candidate_id"
-            name="candidate_id"
-            autocomplete="off"
-            required>
-
-        <!-- Employee suggestions appear here -->
-
-        <div
-            id="employee_suggestions">
         </div>
 
-        <br>
+
+        <div class="topbar-right">
+
+            <span class="user-name">
+                Employee Assessment
+            </span>
+
+        </div>
+
+    </header>
 
 
-        <!-- Employee Name -->
 
-        <label>
-            Employee Name:
-        </label>
-
-        <br>
-
-        <input
-            type="text"
-            id="candidate_name"
-            name="candidate_name"
-            required>
-
-        <br><br>
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+    <main class="main-content">
 
 
-        <!-- Team -->
+        <!-- =====================================================
+             TEST HEADER
+             ===================================================== -->
+        <div class="page-header">
 
-        <label>
-            Team:
-        </label>
+            <div>
 
-        <br>
+                <h1 class="page-title">
+                    {{ test.test_name }}
+                </h1>
 
-        <select
-            id="team_id"
-            name="team_id"
-            required>
+                <p class="page-subtitle">
+                    Review the assessment details before starting.
+                </p>
 
-            <option value="">
-                -- Select Team --
-            </option>
+            </div>
 
-            {% for team in teams %}
-
-                <option value="{{ team.id }}">
-                    {{ team.team_name }}
-                </option>
-
-            {% endfor %}
-
-        </select>
-
-        <br><br>
+        </div>
 
 
-        <!-- Message -->
 
-        <p id="employee_message"></p>
+        <!-- =====================================================
+             TEST INFORMATION
+             ===================================================== -->
+        <div class="card">
 
-
-        <!-- Start Test -->
-
-        <button type="submit">
-            Start Test
-        </button>
-
-    </form>
+            <h2 class="card-title">
+                Assessment Details
+            </h2>
 
 
-    <!--
-        JavaScript controls the employee autocomplete.
-    -->
+            <div class="form-group">
 
+                <label>
+                    Duration
+                </label>
+
+                <p>
+                    {{ test.duration }} Minutes
+                </p>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Total Questions
+                </label>
+
+                <p>
+                    {{ test.total_questions }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             CANDIDATE DETAILS
+             ===================================================== -->
+        <div class="card">
+
+            <h2 class="card-title">
+                Candidate Details
+            </h2>
+
+
+            <p class="page-subtitle">
+                Enter your employee information to begin the assessment.
+            </p>
+
+
+            <!-- Candidate information form -->
+            <form method="POST" class="candidate-form">
+
+
+                <!-- Employee ID -->
+                <div class="form-group">
+
+                    <label for="candidate_id">
+                        Employee ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="candidate_id"
+                        name="candidate_id"
+                        class="form-control"
+                        autocomplete="off"
+                        placeholder="Enter Employee ID"
+                        required>
+
+                    <!-- Employee suggestions appear here -->
+                    <div id="employee_suggestions">
+                    </div>
+
+                </div>
+
+
+
+                <!-- Employee Name -->
+                <div class="form-group">
+
+                    <label for="candidate_name">
+                        Employee Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="candidate_name"
+                        name="candidate_name"
+                        class="form-control"
+                        placeholder="Enter Employee Name"
+                        required>
+
+                </div>
+
+
+
+                <!-- Team -->
+                <div class="form-group">
+
+                    <label for="team_id">
+                        Team
+                    </label>
+
+                    <select
+                        id="team_id"
+                        name="team_id"
+                        class="form-control"
+                        required>
+
+                        <option value="">
+                            -- Select Team --
+                        </option>
+
+                        {% for team in teams %}
+
+                            <option value="{{ team.id }}">
+                                {{ team.team_name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Employee message -->
+                <p id="employee_message">
+                </p>
+
+
+
+                <!-- Start Test -->
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Start Test
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             INFORMATION MESSAGE
+             ===================================================== -->
+        <div class="alert alert-success">
+
+            Please make sure your Employee ID, name, and team
+            information are correct before starting the assessment.
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer class="footer">
+
+        <p>
+            PKT AI &copy; 2026
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         EMPLOYEE AUTOCOMPLETE JAVASCRIPT
+         Functionality preserved from the original page.
+         ========================================================= -->
     <script>
 
         // Get the Employee ID input.
@@ -265,6 +416,7 @@
         );
 
     </script>
+
 
 </body>
 

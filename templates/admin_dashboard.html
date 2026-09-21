@@ -1,21 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="PKT AI - Administrator Dashboard"
+    >
 
     <title>PKT AI - Admin Dashboard</title>
 
-    <!--
-        Load the common PKT AI stylesheet.
 
-        All visual styling is maintained separately in:
-        static/css/style.css
-    -->
+    <!-- =====================================================
+         COMMON PKT AI STYLESHEET
+         ===================================================== -->
 
     <link
         rel="stylesheet"
@@ -28,9 +34,9 @@
 <body>
 
 
-<!-- =====================================================
+<!-- =========================================================
      TOP NAVIGATION
-     ===================================================== -->
+     ========================================================= -->
 
 <header class="topbar">
 
@@ -59,101 +65,110 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      APPLICATION LAYOUT
-     ===================================================== -->
+     ========================================================= -->
 
 <div class="app-container">
 
 
-    <!-- =================================================
-         LEFT SIDEBAR
-         ================================================= -->
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
     <aside class="sidebar">
 
+
+        <!-- Administration -->
 
         <div class="sidebar-title">
             Administration
         </div>
 
 
-        <!-- Dashboard -->
+        <!-- Dashboard belongs to the auth blueprint -->
 
-        <a href="#"
-           class="active">
-
+        <a
+            href="{{ url_for('auth.dashboard') }}"
+            class="active"
+        >
             Dashboard
-
         </a>
 
 
         <!-- Create Test -->
 
-        <a href="/tests/create">
-
+        <a
+            href="{{ url_for('test.create_test') }}"
+        >
             Create Test
-
         </a>
 
 
-        <!-- View Tests -->
+        <!-- Test Management -->
 
-        <a href="/tests">
-
+        <a
+            href="{{ url_for('test.view_tests') }}"
+        >
             Tests
-
         </a>
 
 
+
+        <!-- Management -->
 
         <div class="sidebar-title">
-
             Management
-
         </div>
+        <!-- Team Management -->
+
+        <a
+            href="{{ url_for('test.manage_teams') }}"
+        >
+            Teams
+        </a>
 
 
-        <!-- Employee management will be implemented later -->
+
+        <!-- Employee management page has not been created yet -->
 
         <div class="nav-item disabled">
-
             Employees
-
         </div>
 
 
-    <!-- Reports -->
+        <!-- Individual and team reports -->
 
-        <a href="{{ url_for('test.test_results') }}">
-
-             Reports
-
+        <a
+            href="{{ url_for('test.test_results') }}"
+        >
+            Reports
         </a>
 
+
+
+        <!-- Tools -->
 
         <div class="sidebar-title">
-
             Tools
-
         </div>
 
 
-        <!-- Administrator Screen Share -->
+        <!-- Administrator screen sharing -->
 
-        <a href="{{ url_for('test.admin_screen_share') }}">
-
+        <a
+            href="{{ url_for('test.admin_screen_share') }}"
+        >
             Screen Share
-
         </a>
 
 
-        <!-- AI Insights -->
+        <!-- Overall AI insights -->
 
-        <a href="{{ url_for('test.dashboard_ai_insights') }}">
-
+        <a
+            href="{{ url_for('test.dashboard_ai_insights') }}"
+        >
             AI Insights
-
         </a>
 
 
@@ -161,9 +176,9 @@
 
 
 
-    <!-- =================================================
+    <!-- =====================================================
          MAIN CONTENT
-         ================================================= -->
+         ===================================================== -->
 
     <main class="main-content">
 
@@ -178,30 +193,23 @@
             <div>
 
                 <h1 class="page-title">
-
                     Admin Dashboard
-
                 </h1>
 
 
                 <div class="page-subtitle">
-
                     Manage assessments, results,
                     screen sharing and AI insights.
-
                 </div>
 
             </div>
 
 
-
-            <!-- Primary dashboard action -->
-
-            <a href="/tests/create"
-               class="btn btn-primary">
-
+            <a
+                href="{{ url_for('test.create_test') }}"
+                class="btn btn-primary"
+            >
                 + Create New Test
-
             </a>
 
 
@@ -211,9 +219,6 @@
 
         <!-- =================================================
              DASHBOARD STATISTICS
-             
-             These values are placeholders for now.
-             We can connect them to database counts later.
              ================================================= -->
 
         <div class="stats-grid">
@@ -224,16 +229,11 @@
             <div class="stat-card">
 
                 <div class="stat-label">
-
                     Total Tests
-
                 </div>
 
-
                 <div class="stat-value">
-
                     —
-
                 </div>
 
             </div>
@@ -245,16 +245,11 @@
             <div class="stat-card">
 
                 <div class="stat-label">
-
                     Employees
-
                 </div>
 
-
                 <div class="stat-value">
-
                     —
-
                 </div>
 
             </div>
@@ -266,16 +261,11 @@
             <div class="stat-card">
 
                 <div class="stat-label">
-
                     Assessments
-
                 </div>
 
-
                 <div class="stat-value">
-
                     —
-
                 </div>
 
             </div>
@@ -287,16 +277,11 @@
             <div class="stat-card">
 
                 <div class="stat-label">
-
                     AI Insights
-
                 </div>
 
-
                 <div class="stat-value">
-
                     —
-
                 </div>
 
             </div>
@@ -314,39 +299,76 @@
 
 
             <h2 class="card-title">
-
                 Test Management
-
             </h2>
 
 
             <p class="page-subtitle">
-
                 Create and manage employee assessments.
-
             </p>
 
 
-            <br>
+            <div class="card-actions">
+
+                <a
+                    href="{{ url_for('test.create_test') }}"
+                    class="btn btn-primary"
+                >
+                    Create New Test
+                </a>
 
 
-            <a href="/tests/create"
-               class="btn btn-primary">
+                <a
+                    href="{{ url_for('test.view_tests') }}"
+                    class="btn btn-secondary"
+                >
+                    View Tests
+                </a>
 
-                Create New Test
-
-            </a>
-
-
-            <a href="/tests"
-               class="btn btn-secondary">
-
-                View Tests
-
-            </a>
+            </div>
 
 
         </div>
+
+        <!-- =================================================
+            TEAM MANAGEMENT
+        ================================================= -->
+
+        <div class="card">
+
+
+            <h2 class="card-title">
+                Team Management
+            </h2>
+
+
+        <p class="page-subtitle">
+            Create and manage teams, processes and
+            assigned managers.
+        </p>
+
+
+        <div class="card-actions">
+
+            <a
+                href="{{ url_for('test.create_team') }}"
+                class="btn btn-primary"
+            >
+                + Create Team
+            </a>
+
+
+            <a
+                href="{{ url_for('test.manage_teams') }}"
+                class="btn btn-secondary"
+            >
+                Manage Teams
+            </a>
+
+        </div>
+
+
+</div>
 
 
 
@@ -358,34 +380,28 @@
 
 
             <h2 class="card-title">
-
                 Candidate Management
-
             </h2>
 
 
             <p class="page-subtitle">
-
                 Manage employees participating
                 in assessments.
-
             </p>
 
 
-            <br>
+            <div class="card-actions">
 
+                <!-- Employee management route does not exist yet -->
 
-            <!--
-                Employee functionality is not implemented yet.
-            -->
+                <button
+                    class="btn btn-secondary"
+                    disabled
+                >
+                    Employees
+                </button>
 
-            <button
-                class="btn btn-secondary"
-                disabled>
-
-                Employees
-
-            </button>
+            </div>
 
 
         </div>
@@ -400,43 +416,40 @@
 
 
             <h2 class="card-title">
-
                 Reports & Results
-
             </h2>
 
 
             <p class="page-subtitle">
-
                 Review individual and team
                 assessment performance.
-
             </p>
 
 
-            <br>
+            <div class="card-actions">
 
 
-            <!-- Individual candidate results -->
+                <!-- Individual Results -->
 
-            <a
-                href="{{ url_for('test.test_results') }}"
-                class="btn btn-primary">
+                <a
+                    href="{{ url_for('test.test_results') }}"
+                    class="btn btn-primary"
+                >
+                    Individual Results
+                </a>
 
-                Individual Results
 
-            </a>
+                <!-- Team Results -->
+
+                <a
+                    href="{{ url_for('test.team_results') }}"
+                    class="btn btn-secondary"
+                >
+                    Team Results
+                </a>
 
 
-            <!-- Team-wise results -->
-
-            <a
-                href="{{ url_for('test.team_results') }}"
-                class="btn btn-secondary">
-
-                Team Results
-
-            </a>
+            </div>
 
 
         </div>
@@ -451,30 +464,28 @@
 
 
             <h2 class="card-title">
-
                 Screen Share
-
             </h2>
 
 
             <p class="page-subtitle">
-
                 Start the administrator screen-sharing
                 session for visual-based assessments.
-
             </p>
 
 
-            <br>
+            <div class="card-actions">
 
 
-            <a
-                href="{{ url_for('test.admin_screen_share') }}"
-                class="btn btn-primary">
+                <a
+                    href="{{ url_for('test.admin_screen_share') }}"
+                    class="btn btn-primary"
+                >
+                    Start Screen Share
+                </a>
 
-                Start Screen Share
 
-            </a>
+            </div>
 
 
         </div>
@@ -489,42 +500,38 @@
 
 
             <h2 class="card-title">
-
                 AI Insights
-
             </h2>
 
 
             <p class="page-subtitle">
-
                 Generate AI-powered analysis of
                 incorrect employee answers and
                 identify improvement areas.
-
             </p>
 
 
-            <br>
+            <div class="card-status">
+
+                <span class="badge badge-info">
+                    AI Enabled
+                </span>
+
+            </div>
 
 
-            <span class="badge badge-info">
-
-                AI Enabled
-
-            </span>
+            <div class="card-actions">
 
 
-            <br>
-            <br>
+                <a
+                    href="{{ url_for('test.dashboard_ai_insights') }}"
+                    class="btn btn-primary"
+                >
+                    Generate Insights
+                </a>
 
 
-            <a
-                href="{{ url_for('test.dashboard_ai_insights') }}"
-                class="btn btn-primary">
-
-                Generate Insights
-
-            </a>
+            </div>
 
 
         </div>
@@ -535,11 +542,11 @@
              FOOTER
              ================================================= -->
 
-        <div class="footer">
+        <footer class="footer">
 
             PKT AI • Intelligent Assessment Platform
 
-        </div>
+        </footer>
 
 
     </main>

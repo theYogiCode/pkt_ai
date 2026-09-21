@@ -1491,3 +1491,170 @@ tbody tr:hover {
     }
 
 }
+
+/* =========================================================
+   LOGIN PAGE - ADDITIONAL STYLES
+   ========================================================= */
+
+.login-card .btn-primary {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* =========================================================
+   EMPLOYEE DASHBOARD - FINAL LAYOUT FIX
+   ========================================================= */
+
+.employee-page-container {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+
+.employee-main-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+
+/* =========================================================
+   EMPLOYEE DASHBOARD HEADER
+   ========================================================= */
+
+.employee-main-content .page-header {
+    width: 100%;
+    display: block !important;
+    margin: 0 0 32px 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .page-header > div {
+    width: 100%;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .page-title {
+    display: block;
+    width: 100%;
+    margin: 0 0 8px 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .page-subtitle {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+/* =========================================================
+   AVAILABLE ASSESSMENTS
+   ========================================================= */
+
+.employee-main-content .available-assessments {
+    width: 100%;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .available-assessments .section-header {
+    width: 100%;
+    display: block !important;
+    margin: 0 0 20px 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .available-assessments .section-header > div {
+    width: 100%;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .available-assessments .card-title {
+    display: block;
+    width: 100%;
+    margin: 0 0 8px 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+.employee-main-content .available-assessments .test-description {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+}
+
+
+/* =========================================================
+   ASSESSMENT GRID
+   ========================================================= */
+
+.employee-main-content .test-grid {
+    width: 100%;
+    display: grid;
+    text-align: left;
+}
+
+
+/* =========================================================
+   SCREEN SHARE BUTTON SPACING
+   ========================================================= */
+
+.employee-main-content .screen-share-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px !important;
+    margin-top: 20px;
+}
+
+
+.employee-main-content .screen-share-actions .btn {
+    margin: 0 !important;
+}
+
+.employee-dashboard-header,
+.employee-dashboard-header > div,
+.assessment-section-header,
+.assessment-section-header > div {
+    width: 100%;
+    display: block !important;
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}

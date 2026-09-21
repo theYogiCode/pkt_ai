@@ -1,187 +1,344 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>AI Insights</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - AI Assessment Insights</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
-
 <body>
 
-<h1>AI Assessment Insights</h1>
+    <!-- Main page container -->
+    <div class="page-container">
 
-<hr>
+        <!-- Top navigation bar -->
+        <header class="topbar">
 
+            <div class="topbar-left">
 
-<!-- Candidate information -->
-<h3>
-    Candidate:
-    {{ attempt.employee.name }}
-</h3>
+                <div class="logo">
+                    PKT AI
+                </div>
 
-<p>
-    Employee ID:
-    {{ attempt.employee.employee_id }}
-</p>
+                <div class="topbar-title">
+                    AI Assessment Insights
+                </div>
 
+            </div>
 
-<!-- Test information -->
-<p>
-    Test:
-    {{ attempt.test.test_name }}
-</p>
+        </header>
 
 
-<p>
-    Score:
-    {{ attempt.score }}
-</p>
+        <!-- Main content -->
+        <main class="main-content">
 
+            <!-- Page heading -->
+            <div class="page-header">
 
-<p>
-    Percentage:
-    {{ "%.2f"|format(attempt.percentage) }}%
-</p>
+                <div>
 
+                    <h1>
+                        AI Assessment Insights
+                    </h1>
 
-<hr>
+                    <p>
+                        AI-powered analysis of incorrect assessment answers.
+                    </p>
 
+                </div>
 
-<!-- Number of incorrect answers -->
-<h2>
-    Incorrect Answers:
-    {{ incorrect_answers|length }}
-</h2>
+            </div>
 
 
-{% if incorrect_answers %}
+            <!-- Candidate and test summary -->
+            <div class="content-card">
 
+                <div class="content-card-header">
 
-    <!-- Display each incorrect answer -->
-    {% for item in incorrect_answers %}
+                    <div>
 
-        <hr>
+                        <h2>
+                            Candidate Assessment
+                        </h2>
 
-        <h3>
-            Question {{ item.question_number }}
-        </h3>
+                        <p>
+                            Assessment summary and performance details.
+                        </p>
 
+                    </div>
 
-        <!-- Question -->
-        <p>
+                </div>
 
-            <strong>Question:</strong>
 
-            {{ item.question }}
+                <div class="dashboard-grid">
 
-        </p>
+                    <!-- Candidate information -->
+                    <div class="dashboard-card">
 
+                        <div class="dashboard-card-title">
+                            Candidate
+                        </div>
 
-        <!-- Candidate's answer -->
-        <p>
+                        <div class="dashboard-card-value">
+                            {{ attempt.employee.name }}
+                        </div>
 
-            <strong>Candidate Selected:</strong>
+                        <p>
+                            Employee ID:
+                            {{ attempt.employee.employee_id }}
+                        </p>
 
-            {{ item.selected_answer }}
+                    </div>
 
-        </p>
 
-        <p>
+                    <!-- Test information -->
+                    <div class="dashboard-card">
 
-            {{ item.selected_text }}
+                        <div class="dashboard-card-title">
+                            Test
+                        </div>
 
-        </p>
+                        <div class="dashboard-card-value">
+                            {{ attempt.test.test_name }}
+                        </div>
 
+                    </div>
 
-        <!-- Correct answer -->
-        <p>
 
-            <strong>Correct Answer:</strong>
+                    <!-- Score -->
+                    <div class="dashboard-card">
 
-            {{ item.correct_answer }}
+                        <div class="dashboard-card-title">
+                            Score
+                        </div>
 
-        </p>
+                        <div class="dashboard-card-value">
+                            {{ attempt.score }}
+                        </div>
 
-        <p>
+                    </div>
 
-            {{ item.correct_text }}
 
-        </p>
+                    <!-- Percentage -->
+                    <div class="dashboard-card">
 
+                        <div class="dashboard-card-title">
+                            Percentage
+                        </div>
 
-        <!-- Marks -->
-        <p>
+                        <div class="dashboard-card-value">
+                            {{ "%.2f"|format(attempt.percentage) }}%
+                        </div>
 
-            <strong>Marks:</strong>
+                    </div>
 
-            {{ item.marks }}
+                </div>
 
-        </p>
+            </div>
 
 
-        <hr>
+            <!-- Incorrect answers summary -->
+            <div class="content-card">
 
+                <div class="content-card-header">
 
-        <!-- Gemini AI insight -->
-        <h3>
-            🤖 AI Insight
-        </h3>
+                    <div>
 
-        <p>
+                        <h2>
+                            Incorrect Answers:
+                            {{ incorrect_answers|length }}
+                        </h2>
 
-            {{ item.ai_insight }}
+                        <p>
+                            Review the questions answered incorrectly
+                            and the corresponding AI analysis.
+                        </p>
 
-        </p>
+                    </div>
 
+                </div>
 
-    {% endfor %}
 
+                {% if incorrect_answers %}
 
-{% else %}
 
+                    <!-- Display each incorrect answer -->
+                    {% for item in incorrect_answers %}
 
-    <!-- Message when there are no incorrect answers -->
-    <h3>
-        Excellent! No incorrect answers were found.
-    </h3>
+                    <div class="content-card">
 
-    <p>
-        Gemini analysis is not required because
-        the candidate answered every question correctly.
-    </p>
+                        <!-- Question heading -->
+                        <div class="content-card-header">
 
+                            <div>
 
-{% endif %}
+                                <h3>
+                                    Question {{ item.question_number }}
+                                </h3>
 
+                            </div>
 
-<hr>
+                        </div>
 
 
-<!-- Return to individual results -->
-<a href="{{ url_for('test.test_results') }}">
+                        <!-- Question -->
+                        <div class="form-group">
 
-    <button type="button">
-        Back to Individual Results
-    </button>
+                            <label>
+                                Question
+                            </label>
 
-</a>
+                            <p>
+                                {{ item.question }}
+                            </p>
 
+                        </div>
 
-<br><br>
 
+                        <!-- Candidate answer -->
+                        <div class="form-group">
 
-<!-- Return to admin dashboard -->
-<a href="{{ url_for('auth.dashboard') }}">
+                            <label>
+                                Candidate Selected
+                            </label>
 
-    <button type="button">
-        Back to Dashboard
-    </button>
+                            <p>
+                                <strong>
+                                    {{ item.selected_answer }}
+                                </strong>
+                            </p>
 
-</a>
+                            <p>
+                                {{ item.selected_text }}
+                            </p>
 
+                        </div>
+
+
+                        <!-- Correct answer -->
+                        <div class="form-group">
+
+                            <label>
+                                Correct Answer
+                            </label>
+
+                            <p>
+                                <strong>
+                                    {{ item.correct_answer }}
+                                </strong>
+                            </p>
+
+                            <p>
+                                {{ item.correct_text }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Marks -->
+                        <div class="form-group">
+
+                            <label>
+                                Marks
+                            </label>
+
+                            <p>
+                                {{ item.marks }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Gemini AI insight -->
+                        <div class="alert alert-success">
+
+                            <h3>
+                                🤖 AI Insight
+                            </h3>
+
+                            <p>
+                                {{ item.ai_insight }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <!-- Message when there are no incorrect answers -->
+                    <div class="alert alert-success">
+
+                        <h3>
+                            Excellent! No incorrect answers were found.
+                        </h3>
+
+                        <p>
+                            Gemini analysis is not required because
+                            the candidate answered every question correctly.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Navigation actions -->
+            <div class="content-card">
+
+                <div class="table-actions">
+
+                    <!-- Return to individual results -->
+                    <a href="{{ url_for('test.test_results') }}"
+                       class="btn btn-primary">
+
+                        Back to Individual Results
+
+                    </a>
+
+
+                    <!-- Return to admin dashboard -->
+                    <a href="{{ url_for('auth.dashboard') }}"
+                       class="btn btn-secondary">
+
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
+
+    </div>
 
 </body>
 

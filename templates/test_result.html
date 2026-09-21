@@ -1,38 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Test Result</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Test Result - PKT AI</title>
+
+    <!-- Use the existing common PKT AI stylesheet -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- Display the test name -->
-    <h2>Test Completed</h2>
 
-    <h3>{{ test.test_name }}</h3>
+    <!-- =========================================================
+         TOP NAVIGATION
+         ========================================================= -->
+    <header class="topbar">
 
-    <hr>
+        <div class="logo">
 
-    <!-- Display the candidate's score -->
-    <h3>
-        Score:
-        {{ score }}
-        /
-        {{ maximum_score }}
-    </h3>
+            <div class="logo-badge">
+                PK
+            </div>
 
-    <!-- Display percentage -->
-    <h3>
-        Percentage:
-        {{ "%.2f"|format(percentage) }}%
-    </h3>
+            <span>
+                PKT AI
+            </span>
 
-    <hr>
+        </div>
 
-    <p>
-        Your test has been successfully submitted.
-    </p>
+
+        <div class="topbar-right">
+
+            <span class="user-name">
+                Employee Assessment
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+    <main class="main-content">
+
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Test Completed
+                </h1>
+
+                <p class="page-subtitle">
+                    Your assessment has been successfully submitted.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             RESULT SUMMARY
+             ===================================================== -->
+        <div class="card">
+
+            <h2 class="card-title">
+                {{ test.test_name }}
+            </h2>
+
+
+            <!-- Score -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Score
+                    </div>
+
+                    <div class="stat-value">
+                        {{ score }} / {{ maximum_score }}
+                    </div>
+
+                </div>
+
+
+                <!-- Percentage -->
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Percentage
+                    </div>
+
+                    <div class="stat-value">
+                        {{ "%.2f"|format(percentage) }}%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             COMPLETION MESSAGE
+             ===================================================== -->
+        <div class="alert alert-success">
+
+            Your test has been successfully submitted.
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer class="footer">
+
+        <p>
+            PKT AI &copy; 2026
+        </p>
+
+    </footer>
+
 
 </body>
 

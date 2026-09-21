@@ -1,95 +1,514 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Question Management</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Question Management - PKT AI</title>
+
+
+    <!--
+        Load the common PKT AI stylesheet.
+
+        Main styling is maintained separately in:
+        static/css/style.css
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <!--
+        Small page-specific adjustments.
+        The main styling continues to come from style.css.
+    -->
+
+    <style>
+
+        /* Keep the question table readable on smaller screens */
+        .question-table-container {
+            overflow-x: auto;
+        }
+
+
+        /* Keep the question text from making the table too wide */
+        .question-text-cell {
+            min-width: 400px;
+            max-width: 650px;
+        }
+
+
+        /* Keep action buttons together */
+        .question-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+
+        /* Keep the delete action visually distinct */
+        .question-actions .btn-danger {
+            margin: 0;
+        }
+
+
+        /* Empty question list message */
+        .empty-questions {
+            padding: 32px;
+            text-align: center;
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<h2>{{ test.test_name }}</h2>
 
-<p>
+<!-- =====================================================
+     TOP NAVIGATION
+     ===================================================== -->
 
-Duration :
-{{ test.duration }} Minutes
+<header class="topbar">
 
-</p>
+    <div class="logo">
 
-<hr>
+        <div class="logo-badge">
+            PK
+        </div>
 
-<a href="{{ url_for('test.add_question', test_id=test.id) }}">
+        <span>
+            PKT AI
+        </span>
 
-<button>
-
-Add Question
-
-</button>
-
-</a>
-
-<br><br>
-
-<table border="1">
-
-<tr>
-
-<th>No.</th>
-
-<th>Question</th>
-
-<th>Correct</th>
-
-<th>Marks</th>
-
-<th>Actions</th>
-
-</tr>
-
-{% for question in questions %}
-
-<tr>
-
-<td>{{ question.question_number }}</td>
-
-<td>{{ question.question_text }}</td>
-
-<td>{{ question.correct_answer }}</td>
-
-<td>{{ question.marks }}</td>
-
-<!-- This button opens the selected question for editing. -->
-
-<!-- These buttons allow the admin to edit or delete the question. -->
-
-<td>
-
-    <a href="{{ url_for(
-        'test.edit_question',
-        test_id=test.id,
-        question_id=question.id
-    ) }}">
-        <button type="button">Edit</button>
-    </a>
+    </div>
 
 
-    <a href="{{ url_for(
-        'test.delete_question',
-        test_id=test.id,
-        question_id=question.id
-    ) }}">
-        <button type="button">Delete</button>
-    </a>
+    <div class="topbar-right">
 
-</td>
+        <span class="user-name">
+            Test Management
+        </span>
 
-</tr>
+    </div>
 
-{% endfor %}
+</header>
 
-</table>
+
+
+<!-- =====================================================
+     APPLICATION LAYOUT
+     ===================================================== -->
+
+<div class="app-container">
+
+
+    <!-- =================================================
+         LEFT SIDEBAR
+         ================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-title">
+            Administration
+        </div>
+
+
+        <!-- Dashboard -->
+
+        <a href="/">
+            Dashboard
+        </a>
+
+
+        <!-- Create Test -->
+
+        <a href="/tests/create">
+            Create Test
+        </a>
+
+
+        <!-- Tests -->
+
+        <a href="/tests"
+           class="active">
+
+            Tests
+
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Management
+        </div>
+
+
+        <!-- Employee management is not implemented yet -->
+
+        <div class="nav-item disabled">
+            Employees
+        </div>
+
+
+        <!-- Reports -->
+
+        <a href="{{ url_for('test.test_results') }}">
+            Reports
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Tools
+        </div>
+
+
+        <!-- Administrator Screen Share -->
+
+        <a href="{{ url_for('test.admin_screen_share') }}">
+            Screen Share
+        </a>
+
+
+        <!-- AI Insights -->
+
+        <a href="{{ url_for('test.dashboard_ai_insights') }}">
+            AI Insights
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    {{ test.test_name }}
+                </h1>
+
+                <p class="page-subtitle">
+                    Manage questions for this assessment.
+                </p>
+
+            </div>
+
+
+            <!-- Add Question -->
+
+            <a
+                href="{{ url_for('test.add_question', test_id=test.id) }}"
+                class="btn btn-primary">
+
+                + Add Question
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TEST INFORMATION
+             ================================================= -->
+
+        <div class="card">
+
+            <h2 class="card-title">
+                Assessment Information
+            </h2>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Duration
+                    </div>
+
+                    <div class="stat-value">
+                        {{ test.duration }}
+                        <span style="font-size: 14px;">
+                            Minutes
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Questions
+                    </div>
+
+                    <div class="stat-value">
+                        {{ questions|length }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUESTION LIST
+             ================================================= -->
+
+        <div class="card">
+
+            <div class="page-header"
+                 style="margin-bottom: 20px;">
+
+                <div>
+
+                    <h2 class="card-title"
+                        style="margin-bottom: 4px;">
+
+                        Questions
+
+                    </h2>
+
+                    <p class="page-subtitle">
+
+                        Review, edit, or delete questions
+                        associated with this test.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if questions %}
+
+
+            <div class="table-container question-table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                No.
+                            </th>
+
+                            <th>
+                                Question
+                            </th>
+
+                            <th>
+                                Correct
+                            </th>
+
+                            <th>
+                                Marks
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for question in questions %}
+
+                        <tr>
+
+                            <!-- Question number -->
+
+                            <td>
+
+                                <strong>
+                                    {{ question.question_number }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- Question text -->
+
+                            <td class="question-text-cell">
+
+                                {{ question.question_text }}
+
+                            </td>
+
+
+                            <!-- Correct answer -->
+
+                            <td>
+
+                                <span class="badge badge-success">
+
+                                    {{ question.correct_answer }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- Marks -->
+
+                            <td>
+
+                                {{ question.marks }}
+
+                            </td>
+
+
+                            <!-- Actions -->
+
+                            <td>
+
+                                <div class="question-actions">
+
+
+                                    <!-- Edit question -->
+
+                                    <a
+                                        href="{{ url_for(
+                                            'test.edit_question',
+                                            test_id=test.id,
+                                            question_id=question.id
+                                        ) }}"
+                                        class="btn btn-secondary">
+
+                                        Edit
+
+                                    </a>
+
+
+                                    <!-- Delete question -->
+
+                                    <a
+                                        href="{{ url_for(
+                                            'test.delete_question',
+                                            test_id=test.id,
+                                            question_id=question.id
+                                        ) }}"
+                                        class="btn btn-danger">
+
+                                        Delete
+
+                                    </a>
+
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- =================================================
+                 EMPTY STATE
+                 ================================================= -->
+
+            <div class="empty-questions">
+
+                <span class="badge badge-warning">
+                    No Questions
+                </span>
+
+
+                <h3>
+                    No questions have been added yet.
+                </h3>
+
+
+                <p class="page-subtitle">
+
+                    Add the first question to start
+                    configuring this assessment.
+
+                </p>
+
+
+                <br>
+
+
+                <a
+                    href="{{ url_for('test.add_question', test_id=test.id) }}"
+                    class="btn btn-primary">
+
+                    + Add First Question
+
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="footer">
+
+            PKT AI • Intelligent Assessment Platform
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
 

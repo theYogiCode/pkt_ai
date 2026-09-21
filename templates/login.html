@@ -1,31 +1,129 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 
 <head>
-    <title>PKT AI Login</title>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PKT AI - Admin Login</title>
+
+<!-- Common PKT AI stylesheet -->
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
 
 <body>
 
-    <h2>Admin Login</h2>
 
-    <form method="POST">
+<!-- =====================================================
+     Login Page
+     ===================================================== -->
 
-        <label>Email</label>
+<div class="login-page">
 
-        <input type="email" name="email">
+    <!-- Login Card -->
+    <div class="login-card">
 
-        <br><br>
+        <!-- Login Heading -->
+        <h1 class="login-title">
+            PKT AI
+        </h1>
 
-        <label>Password</label>
+        <p class="login-subtitle">
+            Admin Portal
+        </p>
 
-        <input type="password" name="password">
 
-        <br><br>
+        <!-- =================================================
+             Flask Flash Messages
+             ================================================= -->
 
-        <button type="submit">Login</button>
+        {% with messages = get_flashed_messages(with_categories=true) %}
 
-    </form>
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =================================================
+             Login Form
+             ================================================= -->
+
+        <form method="POST">
+
+            <!-- Email -->
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Password -->
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Login Button -->
+            <button
+                type="submit"
+                class="btn btn-primary"
+                
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- Footer Text -->
+        <p class="login-footer">
+            PKT AI Assessment Platform
+        </p>
+
+    </div>
+
+</div>
 
 </body>
 

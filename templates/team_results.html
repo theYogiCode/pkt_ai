@@ -1,121 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Team Results</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - Team Results</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-    <!-- Page heading -->
-    <h2>Team-wise Test Results</h2>
+    <!-- Main page container -->
+    <div class="page-container">
 
-    <hr>
+        <!-- Top navigation bar -->
+        <header class="topbar">
 
+            <div class="topbar-left">
 
-    <!-- Display team results -->
-    <table border="1">
+                <div class="logo">
+                    PKT AI
+                </div>
 
-        <tr>
+                <div class="topbar-title">
+                    Team Results
+                </div>
 
-            <th>Team</th>
+            </div>
 
-            <th>Test</th>
-
-            <th>Employees Completed</th>
-
-            <th>Total Score</th>
-
-            <th>Total Possible</th>
-
-            <th>Average Percentage</th>
-
-        </tr>
+        </header>
 
 
-        {% for result in results %}
+        <!-- Main content -->
+        <main class="main-content">
 
-        <tr>
+            <!-- Page heading -->
+            <div class="page-header">
 
-            <!-- Team name -->
-            <td>
-                {{ result.team_name }}
-            </td>
+                <div>
 
+                    <h1>
+                        Team-wise Test Results
+                    </h1>
 
-            <!-- Test name -->
-            <td>
-                {{ result.test_name }}
-            </td>
+                    <p>
+                        View test performance across teams.
+                    </p>
 
+                </div>
 
-            <!-- Number of employees -->
-            <td>
-                {{ result.employee_count }}
-            </td>
-
-
-            <!-- Total score -->
-            <td>
-                {{ result.total_score }}
-            </td>
+            </div>
 
 
-            <!-- Maximum possible score -->
-            <td>
-                {{ result.total_possible }}
-            </td>
+            <!-- Team results table -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h2>
+                            Team Performance
+                        </h2>
+
+                        <p>
+                            Summary of employee test performance by team.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-            <!-- Average percentage -->
-            <td>
-                {{ "%.2f"|format(result.average_percentage) }}%
-            </td>
+                <div class="table-container">
 
-        </tr>
+                    <table class="data-table">
 
-        {% endfor %}
+                        <thead>
 
+                            <tr>
 
-    </table>
+                                <th>Team</th>
 
-    <br>
+                                <th>Test</th>
 
+                                <th>Employees Completed</th>
 
-    <!-- Download team results as Excel -->
-    <a href="{{ url_for('test.export_team_results_excel') }}">
+                                <th>Total Score</th>
 
-        <button type="button">
-            Export Team Results - Excel
-        </button>
+                                <th>Total Possible</th>
 
-    </a>
+                                <th>Average Percentage</th>
 
-    <br><br>
+                            </tr>
+
+                        </thead>
 
 
-    <!-- Download team results as CSV -->
-    <a href="{{ url_for('test.export_team_results_csv') }}">
+                        <tbody>
 
-        <button type="button">
-            Export Team Results - CSV
-        </button>
+                            {% for result in results %}
 
-    </a>
+                            <tr>
 
-    <br><br>
+                                <!-- Team name -->
+                                <td>
+                                    <strong>
+                                        {{ result.team_name }}
+                                    </strong>
+                                </td>
 
 
-    <!-- Return to the admin dashboard -->
-    <a href="{{ url_for('auth.dashboard') }}">
+                                <!-- Test name -->
+                                <td>
+                                    {{ result.test_name }}
+                                </td>
 
-        <button type="button">
-            Back to Dashboard
-        </button>
 
-    </a>
+                                <!-- Number of employees -->
+                                <td>
+                                    {{ result.employee_count }}
+                                </td>
+
+
+                                <!-- Total score -->
+                                <td>
+                                    {{ result.total_score }}
+                                </td>
+
+
+                                <!-- Maximum possible score -->
+                                <td>
+                                    {{ result.total_possible }}
+                                </td>
+
+
+                                <!-- Average percentage -->
+                                <td>
+                                    <strong>
+                                        {{ "%.2f"|format(result.average_percentage) }}%
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- Export and navigation actions -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h2>
+                            Export Results
+                        </h2>
+
+                        <p>
+                            Download team performance reports.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-actions">
+
+                    <!-- Download team results as Excel -->
+                    <a href="{{ url_for('test.export_team_results_excel') }}"
+                       class="btn btn-success">
+
+                        Export Team Results - Excel
+
+                    </a>
+
+
+                    <!-- Download team results as CSV -->
+                    <a href="{{ url_for('test.export_team_results_csv') }}"
+                       class="btn btn-primary">
+
+                        Export Team Results - CSV
+
+                    </a>
+
+
+                    <!-- Return to admin dashboard -->
+                    <a href="{{ url_for('auth.dashboard') }}"
+                       class="btn btn-secondary">
+
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
+
+    </div>
+
 </body>
 
 </html>

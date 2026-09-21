@@ -1,126 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Dashboard AI Insights</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - Overall AI Insights</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-<h1>PKT AI - Overall AI Insights</h1>
+    <!-- Main page container -->
+    <div class="page-container">
 
-<hr>
+        <!-- Top navigation bar -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <div class="logo">
+                    PKT AI
+                </div>
+
+                <div class="topbar-title">
+                    AI Insights
+                </div>
+
+            </div>
+
+        </header>
 
 
-<!-- Check whether completed assessment data exists. -->
-{% if has_data %}
+        <!-- Main content -->
+        <main class="main-content">
+
+            <!-- Page heading -->
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Overall AI Insights
+                    </h1>
+
+                    <p>
+                        AI-powered analysis of completed assessments.
+                    </p>
+
+                </div>
+
+            </div>
 
 
-    <!-- Page description -->
-    <h2>Overall Assessment</h2>
+            {% if has_data %}
 
-    <p>
-        The following assessment has been generated
-        using completed test results.
-    </p>
+            <!-- Overall assessment -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h2>
+                            Overall Assessment
+                        </h2>
+
+                        <p>
+                            The following assessment has been generated
+                            using completed test results.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-    <hr>
+                <!-- Gemini AI analysis -->
+                <div class="alert alert-success">
+
+                    <h3>
+                        🤖 Gemini AI Analysis
+                    </h3>
+
+                    <div>
+                        {{ ai_insight | replace('\n', '<br>') | safe }}
+                    </div>
+
+                </div>
+
+            </div>
 
 
-    <!-- Display the AI-generated assessment. -->
-    <h3>🤖 Gemini AI Analysis</h3>
+            <!-- Completed assessments -->
+            <div class="content-card">
 
-    <div>
+                <div class="content-card-header">
 
-        {{ ai_insight | replace('\n', '<br>') | safe }}
+                    <div>
+
+                        <h2>
+                            Completed Assessments
+                        </h2>
+
+                        <p>
+                            Assessments included in the AI analysis.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Assessment results table -->
+                <div class="table-container">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Employee ID</th>
+
+                                <th>Employee Name</th>
+
+                                <th>Test</th>
+
+                                <th>Score</th>
+
+                                <th>Percentage</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for attempt in attempts %}
+
+                            <tr>
+
+                                <td>
+                                    {{ attempt.employee.employee_id }}
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        {{ attempt.employee.name }}
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    {{ attempt.test.test_name }}
+                                </td>
+
+
+                                <td>
+                                    {{ attempt.score }}
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        {{ "%.2f"|format(attempt.percentage) }}%
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- No completed assessments -->
+            <div class="content-card">
+
+                <div class="alert alert-danger">
+
+                    <h2>
+                        No completed assessments found.
+                    </h2>
+
+                    <p>
+                        Complete at least one test before generating
+                        AI insights.
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Navigation -->
+            <div class="content-card">
+
+                <div class="table-actions">
+
+                    <!-- Return to Admin Dashboard -->
+                    <a href="{{ url_for('auth.dashboard') }}"
+                       class="btn btn-secondary">
+
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
 
     </div>
-
-
-    <hr>
-
-
-    <!-- Display the completed attempts used for analysis. -->
-    <h3>Completed Assessments</h3>
-
-    <table border="1" cellpadding="8">
-
-        <tr>
-
-            <th>Employee ID</th>
-
-            <th>Employee Name</th>
-
-            <th>Test</th>
-
-            <th>Score</th>
-
-            <th>Percentage</th>
-
-        </tr>
-
-
-        {% for attempt in attempts %}
-
-        <tr>
-
-            <td>
-                {{ attempt.employee.employee_id }}
-            </td>
-
-            <td>
-                {{ attempt.employee.name }}
-            </td>
-
-            <td>
-                {{ attempt.test.test_name }}
-            </td>
-
-            <td>
-                {{ attempt.score }}
-            </td>
-
-            <td>
-                {{ "%.2f"|format(attempt.percentage) }}%
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </table>
-
-
-{% else %}
-
-
-    <!-- Display this when there are no completed tests. -->
-    <h2>No completed assessments found.</h2>
-
-    <p>
-        Complete at least one test before generating
-        AI insights.
-    </p>
-
-
-{% endif %}
-
-
-<hr>
-
-
-<!-- Return to the Admin Dashboard. -->
-<a href="{{ url_for('auth.dashboard') }}">
-
-    <button type="button">
-        Back to Dashboard
-    </button>
-
-</a>
-
 
 </body>
 

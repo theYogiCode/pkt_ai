@@ -1,348 +1,544 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>PKT AI - Employee Test Dashboard</title>
+
+    <!-- Load the common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
+
 <body>
 
-    <h1>
-        PKT AI
-    </h1>
+    <!-- =========================================================
+         TOP NAVIGATION BAR
+         ========================================================= -->
+    <header class="topbar">
 
-    <h2>
-        Employee Test Dashboard
-    </h2>
+        <div class="logo">
 
-    <p>
-        Select a test below to begin your assessment.
-    </p>
+            <div class="logo-badge">
+                PK
+            </div>
 
-    <!-- This section lets an employee see whether the administrator
-     is currently sharing a screen and optionally join the share. -->
+            <span>
+                PKT AI
+            </span>
 
-<div id="screenShareSection">
-
-    <h3>Admin Screen Share</h3>
-
-    <p id="screenShareStatus">
-        Checking screen-sharing status...
-    </p>
-
-    <button
-        id="joinScreenShareButton"
-        type="button"
-        style="display: none;"
-    >
-        Join Screen Share
-    </button>
-
-    <br><br>
-
-    <video
-        id="remoteScreen"
-        autoplay
-        playsinline
-        width="800"
-        style="display: none;"
-    ></video>
-
-    <br>
-
-    <button
-        id="leaveScreenShareButton"
-        type="button"
-        style="display: none;"
-    >
-        Leave Screen Share
-    </button>
-
-</div>
-
-<hr>
-
-    <hr>
+        </div>
 
 
-    {% if tests %}
+        <div class="topbar-right">
 
-        {% for test in tests %}
+            <span class="user-name">
+                Employee Portal
+            </span>
 
-            <div>
+        </div>
 
-                <h3>
-                    {{ test.test_name }}
-                </h3>
-
-                <p>
-                    {{ test.description }}
-                </p>
-
-                <p>
-                    Duration:
-                    {{ test.duration }}
-                    Minutes
-                </p>
-
-                <p>
-                    Questions:
-                    {{ test.questions|length }}
-                </p>
-
-                <!-- Tell the employee whether this test requires
-                the administrator's shared visual. -->
-
-                {% if test.requires_screen_share %}
-
-                <p>
-                    <strong>Visual Required:</strong>
-                        Yes
-                </p>
-
-                {% else %}
-
-                <p>
-                    <strong>Visual Required:</strong>
-                        No
-                </p>
-
-                {% endif %}
+    </header>
 
 
-                <a
-                    href="{{ url_for(
-                        'test.start_test',
-                        test_id=test.id
-                    ) }}"
-                >
 
-                    <button type="button">
-                        Start Test
-                    </button>
+    <!-- =========================================================
+         MAIN EMPLOYEE CONTENT
+         ========================================================= -->
+    <main class="employee-page-container">
 
-                </a>
+        <div class="employee-main-content">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+            <div class="page-header employee-dashboard-header">
+
+                <div>
+
+                    <h1 class="page-title">
+                        Employee Test Dashboard
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Select an assessment below to begin your test.
+                    </p>
+
+                </div>
 
             </div>
 
-            <hr>
 
-        {% endfor %}
 
-    {% else %}
+            <!-- =================================================
+                 SCREEN SHARE SECTION
+                 ================================================= -->
+            <section class="card screen-share-card">
+
+                <div class="screen-share-header">
+
+                    <div>
+
+                        <h2 class="card-title">
+                            Live Screen Share
+                        </h2>
+
+                        <p class="test-description">
+                            Join the administrator's screen share when required
+                            for your assessment.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Current screen-share status -->
+                    <span id="screenShareBadge"
+                          class="badge badge-secondary">
+
+                        Not Available
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- Screen-share status message -->
+                <div id="screenShareStatus"
+                     class="screen-share-status">
+
+                    Screen sharing is currently not active.
+
+                </div>
+
+
+
+                <!-- Screen-share action buttons -->
+                <div class="screen-share-actions">
+
+                    <button id="joinScreenShareButton"
+                            class="btn btn-primary"
+                            type="button">
+
+                        Join Screen Share
+
+                    </button>
+
+
+                    <button id="leaveScreenShareButton"
+                            class="btn btn-secondary"
+                            type="button"
+                            hidden>
+
+                        Leave Screen Share
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- Remote screen shared by administrator -->
+                <div class="remote-screen-container">
+
+                    <video id="remoteScreen"
+                           class="remote-screen"
+                           autoplay
+                           playsinline
+                           hidden>
+                    </video>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 AVAILABLE ASSESSMENTS
+                 ================================================= -->
+            <section class="available-assessments">
+
+                <div class="assessment-section-header">
+
+                    <div>
+
+                        <h2 class="card-title">
+                            Available Assessments
+                        </h2>
+
+                        <p class="test-description">
+                            Choose an assessment from the list below to begin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TEST LIST
+                     ================================================= -->
+                {% if tests %}
+
+                <div class="test-grid">
+
+                    {% for test in tests %}
+
+                    <article class="test-card">
+
+
+                        <!-- Test heading -->
+                        <div class="test-card-header">
+
+                            <h3>
+                                {{ test.test_name }}
+                            </h3>
+
+
+                            {% if test.requires_screen_share %}
+
+                            <span class="badge badge-warning">
+                                Screen Share Required
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge badge-success">
+                                Available
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- Test description -->
+                        <div class="test-description">
+
+                            {% if test.description %}
+
+                                {{ test.description }}
+
+                            {% else %}
+
+                                No description available for this assessment.
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- Test information -->
+                        <div class="test-details">
+
+                            <div class="test-detail">
+
+                                <span class="detail-label">
+                                    Duration
+                                </span>
+
+                                <span>
+                                    {{ test.duration }} minutes
+                                </span>
+
+                            </div>
+
+
+                            <div class="test-detail">
+
+                                <span class="detail-label">
+                                    Questions
+                                </span>
+
+                                <span>
+                                    {{ test.questions|length }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Test action -->
+                        <div class="test-card-actions">
+
+                            <a href="{{ url_for('test.start_test', test_id=test.id) }}"
+                               class="btn btn-primary">
+
+                                Start Assessment
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% else %}
+
+                <!-- =================================================
+                     EMPTY STATE
+                     ================================================= -->
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Assessments Available
+                    </h3>
+
+                    <p>
+                        There are currently no assessments assigned to you.
+                        Please check again later.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer class="footer">
 
         <p>
-            No tests are currently available.
+            PKT AI &copy; 2026
         </p>
 
-    {% endif %}
+    </footer>
 
 
-    <!-- This JavaScript connects the employee to the administrator's
-     shared screen using WebRTC. It never requests the employee's
-     camera or microphone. -->
 
-<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-
-<script>
-
-    // Connect the employee browser to Flask-SocketIO.
-    const socket = io();
+    <!-- =========================================================
+         SOCKET.IO
+         ========================================================= -->
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
 
-    // Get the screen-sharing controls.
-    const screenShareStatus =
-        document.getElementById("screenShareStatus");
 
-    const joinScreenShareButton =
-        document.getElementById("joinScreenShareButton");
+    <!-- =========================================================
+         SCREEN SHARE JAVASCRIPT
+         Existing functionality preserved
+         ========================================================= -->
+    <script>
 
-    const leaveScreenShareButton =
-        document.getElementById("leaveScreenShareButton");
-
-    const remoteScreen =
-        document.getElementById("remoteScreen");
+        const socket = io();
 
 
-    // Store the WebRTC connection.
-    let peerConnection = null;
+        const screenShareStatus =
+            document.getElementById("screenShareStatus");
+
+        const screenShareBadge =
+            document.getElementById("screenShareBadge");
+
+        const joinScreenShareButton =
+            document.getElementById("joinScreenShareButton");
+
+        const leaveScreenShareButton =
+            document.getElementById("leaveScreenShareButton");
+
+        const remoteScreen =
+            document.getElementById("remoteScreen");
 
 
-    // Store the administrator's SocketIO ID.
-    let adminSid = null;
+        let peerConnection = null;
+
+        let adminSid = null;
 
 
-    // Ask the server whether screen sharing
-    // is currently active.
-    socket.emit(
-        "check_screen_share"
-    );
+
+        /* Check whether the administrator is currently sharing. */
+        socket.emit("check_screen_share");
 
 
-    // Receive the current screen-sharing status.
-    socket.on(
-        "screen_share_status",
-        function (data) {
+
+        /* Receive current screen-share status. */
+        socket.on("screen_share_status", function(data) {
 
             if (data.active) {
 
                 screenShareStatus.textContent =
-                    "Admin screen share is available.";
+                    "Administrator is currently sharing the screen.";
 
-                joinScreenShareButton.style.display =
-                    "inline-block";
+                screenShareBadge.textContent =
+                    "Live";
+
+                screenShareBadge.className =
+                    "badge badge-success";
 
             }
+
             else {
 
                 screenShareStatus.textContent =
-                    "Admin is not currently sharing a screen.";
+                    "Screen sharing is currently not active.";
 
-                joinScreenShareButton.style.display =
-                    "none";
+                screenShareBadge.textContent =
+                    "Not Available";
+
+                screenShareBadge.className =
+                    "badge badge-secondary";
 
             }
 
-        }
-    );
+        });
 
 
-    // Administrator starts screen sharing after
-    // the employee has already opened this page.
-    socket.on(
-        "screen_share_started",
-        function () {
+
+        /* Administrator started sharing. */
+        socket.on("screen_share_started", function() {
 
             screenShareStatus.textContent =
-                "Admin screen share is available.";
+                "Administrator is currently sharing the screen.";
 
-            joinScreenShareButton.style.display =
-                "inline-block";
+            screenShareBadge.textContent =
+                "Live";
 
-        }
-    );
+            screenShareBadge.className =
+                "badge badge-success";
+
+        });
 
 
-    // Administrator stops screen sharing.
-    socket.on(
-        "screen_share_stopped",
-        function () {
+
+        /* Administrator stopped sharing. */
+        socket.on("screen_share_stopped", function() {
 
             screenShareStatus.textContent =
-                "Admin screen share has ended.";
+                "Screen sharing has ended.";
 
-            joinScreenShareButton.style.display =
-                "none";
+            screenShareBadge.textContent =
+                "Not Available";
 
+            screenShareBadge.className =
+                "badge badge-secondary";
 
             leaveScreenShare();
 
-
-        }
-    );
+        });
 
 
-    // Employee chooses to join the screen share.
-    joinScreenShareButton.addEventListener(
-        "click",
-        function () {
 
-            socket.emit(
-                "join_screen_share"
-            );
+        /* Join the administrator's screen share. */
+        joinScreenShareButton.addEventListener(
+            "click",
+            function() {
+
+                socket.emit("join_screen_share");
+
+                joinScreenShareButton.hidden = true;
+
+                leaveScreenShareButton.hidden = false;
+
+                screenShareStatus.textContent =
+                    "Connecting to screen share...";
+
+            }
+        );
 
 
-            screenShareStatus.textContent =
-                "Connecting to admin screen...";
 
-            joinScreenShareButton.style.display =
-                "none";
+        /* Create WebRTC connection. */
+        function createPeerConnection() {
 
-        }
-    );
+            peerConnection =
+                new RTCPeerConnection({
 
-
-    // Create the WebRTC connection.
-    function createPeerConnection() {
-
-        peerConnection =
-            new RTCPeerConnection(
-                {
                     iceServers: [
+
                         {
                             urls:
                                 "stun:stun.l.google.com:19302"
                         }
+
                     ]
-                }
-            );
+
+                });
 
 
-        // Receive the administrator's screen stream.
-        peerConnection.ontrack =
-            function (event) {
 
-                remoteScreen.srcObject =
-                    event.streams[0];
+            peerConnection.ontrack =
+                function(event) {
 
-                remoteScreen.style.display =
-                    "block";
+                    remoteScreen.srcObject =
+                        event.streams[0];
 
-                leaveScreenShareButton.style.display =
-                    "inline-block";
+                    remoteScreen.hidden =
+                        false;
 
-                screenShareStatus.textContent =
-                    "You are viewing the admin's shared screen.";
-
-            };
+                };
 
 
-        // Send ICE candidates to the administrator.
-        peerConnection.onicecandidate =
-            function (event) {
 
-                if (event.candidate && adminSid) {
+            peerConnection.onicecandidate =
+                function(event) {
 
-                    socket.emit(
-                        "ice_candidate",
-                        {
-                            target: adminSid,
-                            candidate: event.candidate
-                        }
-                    );
+                    if (
+                        event.candidate &&
+                        adminSid
+                    ) {
 
-                }
+                        socket.emit(
+                            "ice_candidate",
+                            {
+                                target: adminSid,
+                                candidate: event.candidate
+                            }
+                        );
 
-            };
+                    }
 
-
-        return peerConnection;
-
-    }
+                };
 
 
-    // Receive the WebRTC offer from the administrator.
-    socket.on(
-        "offer",
-        async function (data) {
+            return peerConnection;
+
+        }
+
+
+
+        /* Receive offer from administrator. */
+        socket.on("offer", async function(data) {
 
             adminSid =
                 data.admin_sid;
 
 
-            // Create our WebRTC connection.
             createPeerConnection();
 
 
-            // Set the administrator's offer.
             await peerConnection.setRemoteDescription(
                 data.offer
             );
 
 
-            // Create an answer.
             const answer =
                 await peerConnection.createAnswer();
 
@@ -352,7 +548,6 @@
             );
 
 
-            // Send the answer back to the administrator.
             socket.emit(
                 "answer",
                 {
@@ -361,14 +556,12 @@
                 }
             );
 
-        }
-    );
+        });
 
 
-    // Receive ICE candidates from the administrator.
-    socket.on(
-        "ice_candidate",
-        async function (data) {
+
+        /* Receive ICE candidate. */
+        socket.on("ice_candidate", async function(data) {
 
             if (!peerConnection) {
                 return;
@@ -382,6 +575,7 @@
                 );
 
             }
+
             catch (error) {
 
                 console.error(
@@ -391,48 +585,55 @@
 
             }
 
-        }
-    );
+        });
 
 
-    // Employee leaves the screen share.
-    leaveScreenShareButton.addEventListener(
-        "click",
-        leaveScreenShare
-    );
 
-
-    function leaveScreenShare() {
-
-        // Close the WebRTC connection.
-        if (peerConnection) {
-
-            peerConnection.close();
-
-            peerConnection = null;
-
-        }
-
-
-        // Remove the shared screen.
-        remoteScreen.srcObject = null;
-
-        remoteScreen.style.display =
-            "none";
-
-        leaveScreenShareButton.style.display =
-            "none";
-
-
-        // The employee can join again if
-        // screen sharing is still active.
-        socket.emit(
-            "check_screen_share"
+        /* Leave screen share. */
+        leaveScreenShareButton.addEventListener(
+            "click",
+            leaveScreenShare
         );
 
-    }
 
-</script>
+
+        function leaveScreenShare() {
+
+            if (peerConnection) {
+
+                peerConnection.close();
+
+                peerConnection = null;
+
+            }
+
+
+            remoteScreen.srcObject =
+                null;
+
+            remoteScreen.hidden =
+                true;
+
+
+            joinScreenShareButton.hidden =
+                false;
+
+            leaveScreenShareButton.hidden =
+                true;
+
+
+            screenShareStatus.textContent =
+                "Screen sharing is currently not active.";
+
+
+            socket.emit(
+                "check_screen_share"
+            );
+
+        }
+
+    </script>
+
 
 </body>
 

@@ -1,147 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Individual Test Results</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - Individual Test Results</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-    <!-- Page heading -->
-    <h2>Individual Test Results</h2>
+    <!-- Main page container -->
+    <div class="page-container">
 
-    <hr>
+        <!-- Top navigation bar -->
+        <header class="topbar">
 
-    {% if attempts %}
+            <div class="topbar-left">
 
-    <!-- Display completed attempts -->
-    <table border="1">
+                <div class="logo">
+                    PKT AI
+                </div>
 
-        <tr>
+                <div class="topbar-title">
+                    Test Results
+                </div>
 
-            <th>Employee ID</th>
+            </div>
 
-            <th>Employee Name</th>
-
-            <th>Team</th>
-
-            <th>Test</th>
-
-            <th>Score</th>
-
-            <th>Percentage</th>
-
-            <th>Status</th>
-
-            <th>Completed At</th>
-
-            <th>Actions</th>
-
-        </tr>
+        </header>
 
 
-        {% for attempt in attempts %}
+        <!-- Main content -->
+        <main class="main-content">
 
-        <tr>
+            <!-- Page heading -->
+            <div class="page-header">
 
-            <!-- Employee ID -->
-            <td>
-                {{ attempt.employee.employee_id }}
-            </td>
+                <div>
 
-            <!-- Employee Name -->
-            <td>
-                {{ attempt.employee.name }}
-            </td>
+                    <h1>
+                        Individual Test Results
+                    </h1>
 
-            <!-- Team -->
-            <td>
-                {{ attempt.employee.team.team_name }}
-            </td>
+                    <p>
+                        View employee test performance and AI insights.
+                    </p>
 
-            <!-- Test Name -->
-            <td>
-                {{ attempt.test.test_name }}
-            </td>
+                </div>
 
-            <!-- Score -->
-            <td>
-                {{ attempt.score }}
-            </td>
+            </div>
 
-            <!-- Percentage -->
-            <td>
-                {{ "%.2f"|format(attempt.percentage) }}%
-            </td>
 
-            <!-- Status -->
-            <td>
-                {{ attempt.status }}
-            </td>
+            {% if attempts %}
 
-            <!-- Completion time -->
-            <td>
-                {{ attempt.completed_at }}
-            </td>
-            <td>
+            <!-- Results table card -->
+            <div class="content-card">
 
-                 <!-- Open AI Insights for this test attempt -->
-                <a href="{{ url_for('test.test_insights', attempt_id=attempt.id) }}">
+                <div class="content-card-header">
 
-                    <button type="button">
-                        AI Insights
-                    </button>
+                    <div>
 
-                </a>
-            </td>
+                        <h2>
+                            Completed Test Results
+                        </h2>
 
-        </tr>
+                        <p>
+                            Individual employee assessment results.
+                        </p>
 
-        {% endfor %}
+                    </div>
 
-    </table>
+                </div>
 
-    {% else %}
 
-    <!-- Display this when there are no completed tests -->
-    <p>
-        No completed test results found.
-    </p>
+                <!-- Results table -->
+                <div class="table-container">
 
-    {% endif %}
+                    <table class="data-table">
 
-    <br>
+                        <thead>
 
-    <!-- This button downloads all individual results as an Excel file. -->
-    <a href="{{ url_for('test.export_individual_results_excel') }}">
+                            <tr>
 
-        <button type="button">
-            Export Individual Results - Excel
-        </button>
+                                <th>Employee ID</th>
 
-    </a>
+                                <th>Employee Name</th>
 
-    <br><br>
-    <!-- This button downloads all individual results as a CSV file. -->
-    <a href="{{ url_for('test.export_individual_results_csv') }}">
+                                <th>Team</th>
 
-        <button type="button">
-            Export Individual Results - CSV
-        </button>
+                                <th>Test</th>
 
-    </a>
+                                <th>Score</th>
 
-    <br><br>
-    <!-- Return to admin dashboard -->
-    <a href="{{ url_for('auth.dashboard') }}">
+                                <th>Percentage</th>
 
-        <button type="button">
-            Back to Dashboard
-        </button>
+                                <th>Status</th>
 
-    </a>
+                                <th>Completed At</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for attempt in attempts %}
+
+                            <tr>
+
+                                <!-- Employee ID -->
+                                <td>
+                                    {{ attempt.employee.employee_id }}
+                                </td>
+
+
+                                <!-- Employee Name -->
+                                <td>
+                                    <strong>
+                                        {{ attempt.employee.name }}
+                                    </strong>
+                                </td>
+
+
+                                <!-- Team -->
+                                <td>
+                                    {{ attempt.employee.team.team_name }}
+                                </td>
+
+
+                                <!-- Test Name -->
+                                <td>
+                                    {{ attempt.test.test_name }}
+                                </td>
+
+
+                                <!-- Score -->
+                                <td>
+                                    {{ attempt.score }}
+                                </td>
+
+
+                                <!-- Percentage -->
+                                <td>
+                                    {{ "%.2f"|format(attempt.percentage) }}%
+                                </td>
+
+
+                                <!-- Status -->
+                                <td>
+
+                                    <span class="badge badge-success">
+                                        {{ attempt.status }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Completion time -->
+                                <td>
+                                    {{ attempt.completed_at }}
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td>
+
+                                    <div class="table-actions">
+
+                                        <!-- Open AI Insights for this test attempt -->
+                                        <a href="{{ url_for('test.test_insights', attempt_id=attempt.id) }}"
+                                           class="btn btn-primary">
+
+                                            AI Insights
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- No results message -->
+            <div class="content-card">
+
+                <div class="alert alert-danger">
+
+                    No completed test results found.
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Export and navigation actions -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h2>
+                            Export Results
+                        </h2>
+
+                        <p>
+                            Download individual test results for reporting.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-actions">
+
+                    <!-- Export Excel -->
+                    <a href="{{ url_for('test.export_individual_results_excel') }}"
+                       class="btn btn-success">
+
+                        Export Individual Results - Excel
+
+                    </a>
+
+
+                    <!-- Export CSV -->
+                    <a href="{{ url_for('test.export_individual_results_csv') }}"
+                       class="btn btn-primary">
+
+                        Export Individual Results - CSV
+
+                    </a>
+
+
+                    <!-- Return to admin dashboard -->
+                    <a href="{{ url_for('auth.dashboard') }}"
+                       class="btn btn-secondary">
+
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
+
+    </div>
 
 </body>
 

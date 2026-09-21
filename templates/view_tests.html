@@ -1,56 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>All Tests</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - All Tests</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
 
 <body>
 
-<h2>All Tests</h2>
+    <!-- Main page container -->
+    <div class="page-container">
 
-<a href="{{ url_for('test.create_test') }}">
-    <button>Create New Test</button>
-</a>
+        <!-- Top navigation bar -->
+        <header class="topbar">
 
-<br><br>
+            <div class="topbar-left">
+                <div class="logo">
+                    PKT AI
+                </div>
 
-<table border="1" cellpadding="8">
+                <div class="topbar-title">
+                    Test Management
+                </div>
+            </div>
 
-    <tr>
-        <th>ID</th>
-        <th>Test Name</th>
-        <th>Duration</th>
-        <th>Actions</th>
-    </tr>
+        </header>
 
-    {% for test in tests %}
-    <tr>
 
-        <td>{{ test.id }}</td>
+        <!-- Main content area -->
+        <main class="main-content">
 
-        <td>{{ test.test_name }}</td>
+            <!-- Page heading -->
+            <div class="page-header">
 
-        <td>{{ test.duration }} Minutes</td>
+                <div>
+                    <h1>All Tests</h1>
 
-        <td>
-            <a href="{{ url_for('test.manage_questions', test_id=test.id) }}">
-                <button>Open</button>
-            </a>
+                    <p>
+                        View and manage all available tests.
+                    </p>
+                </div>
 
-            <a href="{{ url_for('test.delete_test', test_id=test.id) }}">
-                <button>Delete</button>
-            </a>
-            <a href="{{ url_for('test.start_test', test_id=test.id) }}">
-                <button>Take Test</button>
-            </a>
+                <!-- Create Test button -->
+                <div>
+                    <a href="{{ url_for('test.create_test') }}"
+                       class="btn btn-primary">
+                        Create New Test
+                    </a>
+                </div>
 
-        </td>
+            </div>
 
-    </tr>
-    {% endfor %}
 
-</table>
+            <!-- Tests table card -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+                        <h2>Test List</h2>
+
+                        <p>
+                            Manage questions, delete tests,
+                            or start a test.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Tests table -->
+                <div class="table-container">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Test Name</th>
+
+                                <th>Duration</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for test in tests %}
+
+                            <tr>
+
+                                <td>
+                                    {{ test.id }}
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {{ test.test_name }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ test.duration }} Minutes
+                                </td>
+
+                                <td>
+
+                                    <div class="table-actions">
+
+                                        <!-- Open test -->
+                                        <a href="{{ url_for('test.manage_questions', test_id=test.id) }}"
+                                           class="btn btn-primary">
+                                            Open
+                                        </a>
+
+
+                                        <!-- Delete test -->
+                                        <a href="{{ url_for('test.delete_test', test_id=test.id) }}"
+                                           class="btn btn-danger">
+                                            Delete
+                                        </a>
+
+
+                                        <!-- Take test -->
+                                        <a href="{{ url_for('test.start_test', test_id=test.id) }}"
+                                           class="btn btn-success">
+                                            Take Test
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
+
+    </div>
 
 </body>
 

@@ -1,56 +1,167 @@
-<!-- This page allows the administrator to start and stop
-     sharing the administrator's screen. -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>PKT AI - Screen Share</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PKT AI - Admin Screen Share</title>
+
+    <!-- Common PKT AI stylesheet -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-    <h2>PKT AI - Admin Screen Share</h2>
+    <!-- Main page container -->
+    <div class="page-container">
 
-    <p>
-        Use this page to share your screen with employees.
-    </p>
+        <!-- Top navigation bar -->
+        <header class="topbar">
 
-    <hr>
+            <div class="topbar-left">
 
-    <button
-        id="startShareButton"
-        type="button"
-    >
-        Start Screen Share
-    </button>
+                <div class="logo">
+                    PKT AI
+                </div>
 
-    <button
-        id="stopShareButton"
-        type="button"
-        disabled
-    >
-        Stop Screen Share
-    </button>
+                <div class="topbar-title">
+                    Screen Share
+                </div>
 
-    <p id="status">
-        Screen sharing is not active.
-    </p>
+            </div>
 
-    <br>
-
-    <video
-        id="localScreen"
-        autoplay
-        playsinline
-        muted
-        width="800"
-    ></video>
+        </header>
 
 
-    <!-- Socket.IO client library. -->
+        <!-- Main content -->
+        <main class="main-content">
+
+            <!-- Page heading -->
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Admin Screen Share
+                    </h1>
+
+                    <p>
+                        Share your screen with employees during the assessment.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Screen sharing card -->
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h2>
+                            Screen Sharing
+                        </h2>
+
+                        <p>
+                            Start screen sharing to allow employees
+                            to view the current assessment material.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Screen sharing controls -->
+                <div class="table-actions">
+
+                    <button
+                        id="startShareButton"
+                        type="button"
+                        class="btn btn-success"
+                    >
+                        Start Screen Share
+                    </button>
+
+
+                    <button
+                        id="stopShareButton"
+                        type="button"
+                        class="btn btn-danger"
+                        disabled
+                    >
+                        Stop Screen Share
+                    </button>
+
+                </div>
+
+
+                <!-- Screen sharing status -->
+                <div class="alert alert-success"
+                     id="status">
+
+                    Screen sharing is not active.
+
+                </div>
+
+
+                <!-- Local screen preview -->
+                <div class="content-card">
+
+                    <div class="content-card-header">
+
+                        <div>
+
+                            <h3>
+                                Screen Preview
+                            </h3>
+
+                            <p>
+                                The selected screen will appear below.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <video
+                        id="localScreen"
+                        autoplay
+                        playsinline
+                        muted
+                        width="800"
+                    ></video>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <p>
+                PKT AI &copy; 2026
+            </p>
+
+        </footer>
+
+    </div>
+
+
+    <!-- Socket.IO client library -->
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
 

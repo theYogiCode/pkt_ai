@@ -1,163 +1,533 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Edit Question</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Question - PKT AI</title>
+
+
+    <!--
+        Load the common PKT AI stylesheet.
+
+        Main styling is maintained separately in:
+        static/css/style.css
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <!--
+        Small page-specific adjustments.
+        The main styling continues to come from style.css.
+    -->
+
+    <style>
+
+        /* Keep the question editing form at a comfortable width */
+        .question-form {
+            max-width: 900px;
+        }
+
+
+        /* Give the question textarea enough writing space */
+        .question-textarea {
+            width: 100%;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+
+        /* Keep option fields easy to read */
+        .option-input {
+            width: 100%;
+            max-width: 750px;
+        }
+
+
+        /* Keep marks field compact */
+        .marks-input {
+            max-width: 180px;
+        }
+
+
+        /* Keep action buttons together */
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+
+        /* Question information shown below the header */
+        .question-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- Display the page title. -->
-    <h2>Edit Question</h2>
 
-    <!-- Display the test to which this question belongs. -->
-    <h3>Test: {{ test.test_name }}</h3>
+<!-- =====================================================
+     TOP NAVIGATION
+     ===================================================== -->
 
-    <!-- Display the question number. -->
-    <p>
-        Question Number: {{ question.question_number }}
-    </p>
+<header class="topbar">
 
-    <hr>
+    <div class="logo">
 
-    <!--
-        This form sends the updated information to the edit_question
-        Flask route using POST.
-    -->
-    <form method="POST">
+        <div class="logo-badge">
+            PK
+        </div>
 
-        <!-- Question text -->
-        <label>Question:</label>
-        <br>
+        <span>
+            PKT AI
+        </span>
 
-        <textarea
-            name="question_text"
-            rows="6"
-            cols="80"
-            required>{{ question.question_text }}</textarea>
-
-        <br><br>
+    </div>
 
 
-        <!-- Option A -->
-        <label>Option A:</label>
-        <br>
+    <div class="topbar-right">
 
-        <input
-            type="text"
-            name="option_a"
-            value="{{ question.option_a }}"
-            size="80"
-            required>
+        <span class="user-name">
+            Test Management
+        </span>
 
-        <br><br>
+    </div>
+
+</header>
 
 
-        <!-- Option B -->
-        <label>Option B:</label>
-        <br>
 
-        <input
-            type="text"
-            name="option_b"
-            value="{{ question.option_b }}"
-            size="80"
-            required>
+<!-- =====================================================
+     APPLICATION LAYOUT
+     ===================================================== -->
 
-        <br><br>
+<div class="app-container">
 
 
-        <!-- Option C -->
-        <label>Option C:</label>
-        <br>
+    <!-- =================================================
+         LEFT SIDEBAR
+         ================================================= -->
 
-        <input
-            type="text"
-            name="option_c"
-            value="{{ question.option_c }}"
-            size="80"
-            required>
-
-        <br><br>
+    <aside class="sidebar">
 
 
-        <!-- Option D -->
-        <label>Option D:</label>
-        <br>
-
-        <input
-            type="text"
-            name="option_d"
-            value="{{ question.option_d }}"
-            size="80"
-            required>
-
-        <br><br>
+        <div class="sidebar-title">
+            Administration
+        </div>
 
 
-        <!-- Correct answer -->
-        <label>Correct Answer:</label>
-        <br>
+        <!-- Dashboard -->
 
-        <select name="correct_answer" required>
-
-            <option value="A"
-                {% if question.correct_answer == "A" %}selected{% endif %}>
-                A
-            </option>
-
-            <option value="B"
-                {% if question.correct_answer == "B" %}selected{% endif %}>
-                B
-            </option>
-
-            <option value="C"
-                {% if question.correct_answer == "C" %}selected{% endif %}>
-                C
-            </option>
-
-            <option value="D"
-                {% if question.correct_answer == "D" %}selected{% endif %}>
-                D
-            </option>
-
-        </select>
-
-        <br><br>
+        <a href="/">
+            Dashboard
+        </a>
 
 
-        <!-- Marks -->
-        <label>Marks:</label>
-        <br>
+        <!-- Create Test -->
 
-        <input
-            type="number"
-            name="marks"
-            value="{{ question.marks }}"
-            min="1"
-            required>
-
-        <br><br>
+        <a href="/tests/create">
+            Create Test
+        </a>
 
 
-        <!-- Submit updated question -->
-        <button type="submit">
-            Update Question
-        </button>
+        <!-- View Tests -->
 
-    </form>
+        <a href="/tests"
+           class="active">
 
-    <br>
+            Tests
 
-    <!-- Return without making changes. -->
-    <a href="{{ url_for(
-        'test.manage_questions',
-        test_id=test.id
-    ) }}">
-        <button type="button">
-            Cancel
-        </button>
-    </a>
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Management
+        </div>
+
+
+        <!-- Employee management is not implemented yet -->
+
+        <div class="nav-item disabled">
+            Employees
+        </div>
+
+
+        <!-- Reports -->
+
+        <a href="{{ url_for('test.test_results') }}">
+            Reports
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Tools
+        </div>
+
+
+        <!-- Administrator Screen Share -->
+
+        <a href="{{ url_for('test.admin_screen_share') }}">
+            Screen Share
+        </a>
+
+
+        <!-- AI Insights -->
+
+        <a href="{{ url_for('test.dashboard_ai_insights') }}">
+            AI Insights
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Edit Question
+                </h1>
+
+                <p class="page-subtitle">
+                    Update the question and assessment options.
+                </p>
+
+            </div>
+
+
+            <!-- Return to question list -->
+
+            <a
+                href="{{ url_for('test.manage_questions', test_id=test.id) }}"
+                class="btn btn-secondary">
+
+                ← Back to Questions
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUESTION INFORMATION
+             ================================================= -->
+
+        <div class="card">
+
+            <h2 class="card-title">
+                Test Information
+            </h2>
+
+
+            <div class="question-info">
+
+                <span class="badge badge-info">
+                    Test
+                </span>
+
+                <strong>
+                    {{ test.test_name }}
+                </strong>
+
+                <span class="badge badge-info">
+                    Question {{ question.question_number }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             EDIT QUESTION FORM
+             ================================================= -->
+
+        <div class="card question-form">
+
+            <h2 class="card-title">
+                Question Details
+            </h2>
+
+
+            <!--
+                This form sends the updated question
+                information to the existing Flask route.
+            -->
+
+            <form method="POST">
+
+
+                <!-- =================================================
+                     QUESTION TEXT
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="question_text">
+                        Question
+                    </label>
+
+                    <textarea
+                        id="question_text"
+                        name="question_text"
+                        class="form-control question-textarea"
+                        required>{{ question.question_text }}</textarea>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     OPTION A
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="option_a">
+                        Option A
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_a"
+                        name="option_a"
+                        class="form-control option-input"
+                        value="{{ question.option_a }}"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     OPTION B
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="option_b">
+                        Option B
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_b"
+                        name="option_b"
+                        class="form-control option-input"
+                        value="{{ question.option_b }}"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     OPTION C
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="option_c">
+                        Option C
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_c"
+                        name="option_c"
+                        class="form-control option-input"
+                        value="{{ question.option_c }}"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     OPTION D
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="option_d">
+                        Option D
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_d"
+                        name="option_d"
+                        class="form-control option-input"
+                        value="{{ question.option_d }}"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CORRECT ANSWER
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="correct_answer">
+                        Correct Answer
+                    </label>
+
+                    <select
+                        id="correct_answer"
+                        name="correct_answer"
+                        class="form-control"
+                        required>
+
+                        <option
+                            value="A"
+                            {% if question.correct_answer == "A" %}selected{% endif %}>
+
+                            A
+
+                        </option>
+
+                        <option
+                            value="B"
+                            {% if question.correct_answer == "B" %}selected{% endif %}>
+
+                            B
+
+                        </option>
+
+                        <option
+                            value="C"
+                            {% if question.correct_answer == "C" %}selected{% endif %}>
+
+                            C
+
+                        </option>
+
+                        <option
+                            value="D"
+                            {% if question.correct_answer == "D" %}selected{% endif %}>
+
+                            D
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     MARKS
+                     ================================================= -->
+
+                <div class="form-group">
+
+                    <label for="marks">
+                        Marks
+                    </label>
+
+                    <input
+                        type="number"
+                        id="marks"
+                        name="marks"
+                        class="form-control marks-input"
+                        value="{{ question.marks }}"
+                        min="1"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     FORM ACTIONS
+                     ================================================= -->
+
+                <div class="form-actions">
+
+                    <!-- Update question -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Update Question
+
+                    </button>
+
+
+                    <!-- Cancel without making changes -->
+
+                    <a
+                        href="{{ url_for('test.manage_questions', test_id=test.id) }}"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="footer">
+
+            PKT AI • Intelligent Assessment Platform
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
 

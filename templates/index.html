@@ -1,426 +1,515 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>PKT AI - Assessment Platform</title>
+<meta
+    name="description"
+    content="PKT AI - AI-powered assessment and performance platform."
+>
 
-    <!-- Common PKT AI stylesheet -->
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"
-    >
+<title>PKT AI - Assessment Platform</title>
+
+
+<!--
+    Flask loads CSS from the static folder.
+
+    Expected location:
+    static/css/style.css
+-->
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
 
 </head>
 
-
 <body>
 
+<!-- =====================================================
+     NAVIGATION BAR
+     ===================================================== -->
 
-    <!-- =====================================================
-         NAVIGATION BAR
-         ===================================================== -->
+<nav class="home-navbar">
 
-    <nav class="home-navbar">
+    <div class="home-logo">
+        PKT <span>AI</span>
+    </div>
 
-        <div class="home-logo">
-            PKT <span>AI</span>
+
+    <div class="home-nav-links">
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#features">
+            Features
+        </a>
+
+        <a href="#roles">
+            Get Started
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     HERO SECTION
+     ===================================================== -->
+
+<section class="home-hero">
+
+    <div class="home-hero-content">
+
+
+        <div class="home-badge">
+            AI-Powered Assessment Platform
         </div>
 
 
-        <div class="home-nav-links">
+        <h1>
+            Smart Assessments.
+            <br>
+            Better Insights.
+        </h1>
 
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#features">
-                Features
-            </a>
-
-            <a href="#roles">
-                Get Started
-            </a>
-
-        </div>
-
-    </nav>
-
-
-
-    <!-- =====================================================
-         HERO SECTION
-         ===================================================== -->
-
-    <section class="home-hero">
-
-        <div class="home-hero-content">
-
-
-            <div class="home-badge">
-                AI-Powered Assessment Platform
-            </div>
-
-
-            <h1>
-                Smart Assessments.
-                <br>
-                Better Insights.
-            </h1>
-
-
-            <p>
-                PKT AI is an assessment platform designed to
-                create, manage, conduct and evaluate
-                knowledge-based tests with optional
-                visual assessments and AI-powered insights.
-            </p>
-
-
-            <div class="home-hero-buttons">
-
-                <a
-                    href="{{ url_for('auth.login') }}"
-                    class="home-btn home-btn-primary"
-                >
-                    Admin Login
-                </a>
-
-
-                <a
-                    href="{{ url_for('test.employee_test_dashboard') }}"
-                    class="home-btn home-btn-secondary"
-                >
-                    Employee Portal
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <div class="home-hero-visual">
-
-            <div class="home-dashboard-card">
-
-                <div class="home-card-header">
-
-                    <span>
-                        PKT AI Assessment
-                    </span>
-
-                    <span class="home-status">
-                        ● Active
-                    </span>
-
-                </div>
-
-
-                <div class="home-card-body">
-
-                    <div class="home-stat">
-
-                        <strong>
-                            Assessments
-                        </strong>
-
-                        <span>
-                            Create & Manage
-                        </span>
-
-                    </div>
-
-
-                    <div class="home-stat">
-
-                        <strong>
-                            Visual Testing
-                        </strong>
-
-                        <span>
-                            Live Screen Sharing
-                        </span>
-
-                    </div>
-
-
-                    <div class="home-stat">
-
-                        <strong>
-                            AI Insights
-                        </strong>
-
-                        <span>
-                            Performance Analysis
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         ABOUT SECTION
-         ===================================================== -->
-
-    <section
-        id="about"
-        class="home-section"
-    >
-
-        <div class="home-section-heading">
-
-            <span>
-                ABOUT PKT AI
-            </span>
-
-            <h2>
-                A complete assessment workflow
-            </h2>
-
-            <p>
-                From test creation to candidate evaluation,
-                PKT AI brings the complete assessment process
-                into one platform.
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         FEATURES
-         ===================================================== -->
-
-    <section
-        id="features"
-        class="home-section home-features"
-    >
-
-        <div class="home-section-heading">
-
-            <span>
-                PLATFORM FEATURES
-            </span>
-
-            <h2>
-                Everything needed to conduct assessments
-            </h2>
-
-        </div>
-
-
-        <div class="home-feature-grid">
-
-
-            <div class="home-feature-card">
-
-                <div class="home-feature-icon">
-                    01
-                </div>
-
-                <h3>
-                    Test Management
-                </h3>
-
-                <p>
-                    Administrators can create and manage
-                    assessment tests and questions.
-                </p>
-
-            </div>
-
-
-            <div class="home-feature-card">
-
-                <div class="home-feature-icon">
-                    02
-                </div>
-
-                <h3>
-                    Employee Testing
-                </h3>
-
-                <p>
-                    Employees can select assigned tests,
-                    register automatically and complete
-                    assessments online.
-                </p>
-
-            </div>
-
-
-            <div class="home-feature-card">
-
-                <div class="home-feature-icon">
-                    03
-                </div>
-
-                <h3>
-                    Visual Assessments
-                </h3>
-
-                <p>
-                    Tests that require visual information
-                    can use administrator-controlled
-                    live screen sharing.
-                </p>
-
-            </div>
-
-
-            <div class="home-feature-card">
-
-                <div class="home-feature-icon">
-                    04
-                </div>
-
-                <h3>
-                    Performance Reports
-                </h3>
-
-                <p>
-                    Individual and team-level assessment
-                    results can be reviewed through reports.
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         ROLE SELECTION
-         ===================================================== -->
-
-    <section
-        id="roles"
-        class="home-role-section"
-    >
-
-        <div class="home-section-heading">
-
-            <span>
-                GET STARTED
-            </span>
-
-            <h2>
-                Choose your portal
-            </h2>
-
-            <p>
-                Select the portal that matches your role.
-            </p>
-
-        </div>
-
-
-        <div class="home-role-grid">
-
-
-            <!-- Admin -->
-            <div class="home-role-card">
-
-                <div class="home-role-number">
-                    ADMIN
-                </div>
-
-                <h3>
-                    Assessment Administrator
-                </h3>
-
-                <p>
-                    Create tests, manage assessments,
-                    review results and control visual
-                    screen sharing.
-                </p>
-
-
-                <a
-                    href="{{ url_for('auth.login') }}"
-                    class="home-btn home-btn-primary"
-                >
-                    Admin Login
-                </a>
-
-            </div>
-
-
-
-            <!-- Employee -->
-            <div class="home-role-card">
-
-                <div class="home-role-number">
-                    EMPLOYEE
-                </div>
-
-                <h3>
-                    Assessment Participant
-                </h3>
-
-                <p>
-                    View available assessments, enter your
-                    employee details and complete assigned
-                    tests.
-                </p>
-
-
-                <a
-                    href="{{ url_for('test.employee_test_dashboard') }}"
-                    class="home-btn home-btn-secondary"
-                >
-                    Start Assessment
-                </a>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="home-footer">
-
-        <div class="home-logo">
-            PKT <span>AI</span>
-        </div>
 
         <p>
-            AI-powered assessment and performance platform.
+            PKT AI is an assessment platform designed to
+            create, manage, conduct and evaluate
+            knowledge-based tests with optional
+            visual assessments and AI-powered insights.
         </p>
 
-        <p class="home-copyright">
-            © 2026 PKT AI. All rights reserved.
+
+        <div class="home-hero-buttons">
+
+
+            <!-- Admin Login -->
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="home-btn home-btn-primary"
+            >
+                Admin Login
+            </a>
+
+
+            <!-- Employee Portal -->
+
+            <a
+                href="{{ url_for('test.employee_test_dashboard') }}"
+                class="home-btn home-btn-secondary"
+            >
+                Employee Portal
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         HERO VISUAL
+         ================================================= -->
+
+    <div class="home-hero-visual">
+
+        <div class="home-dashboard-card">
+
+
+            <div class="home-card-header">
+
+                <span>
+                    PKT AI Assessment
+                </span>
+
+                <span class="home-status">
+                    ● Active
+                </span>
+
+            </div>
+
+
+
+            <div class="home-card-body">
+
+
+                <div class="home-stat">
+
+                    <strong>
+                        Assessments
+                    </strong>
+
+                    <span>
+                        Create & Manage
+                    </span>
+
+                </div>
+
+
+
+                <div class="home-stat">
+
+                    <strong>
+                        Visual Testing
+                    </strong>
+
+                    <span>
+                        Live Screen Sharing
+                    </span>
+
+                </div>
+
+
+
+                <div class="home-stat">
+
+                    <strong>
+                        AI Insights
+                    </strong>
+
+                    <span>
+                        Performance Analysis
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ABOUT SECTION
+     ===================================================== -->
+
+<section
+    id="about"
+    class="home-section"
+>
+
+    <div class="home-section-heading">
+
+
+        <span>
+            ABOUT PKT AI
+        </span>
+
+
+        <h2>
+            A complete assessment workflow
+        </h2>
+
+
+        <p>
+            From test creation to candidate evaluation,
+            PKT AI brings the complete assessment process
+            into one platform.
         </p>
 
-    </footer>
 
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURES
+     ===================================================== -->
+
+<section
+    id="features"
+    class="home-section home-features"
+>
+
+
+    <div class="home-section-heading">
+
+
+        <span>
+            PLATFORM FEATURES
+        </span>
+
+
+        <h2>
+            Everything needed to conduct assessments
+        </h2>
+
+
+    </div>
+
+
+
+    <div class="home-feature-grid">
+
+
+        <!-- =================================================
+             FEATURE 1
+             ================================================= -->
+
+        <div class="home-feature-card">
+
+            <div class="home-feature-icon">
+                01
+            </div>
+
+
+            <h3>
+                Test Management
+            </h3>
+
+
+            <p>
+                Administrators can create and manage
+                assessment tests and questions.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FEATURE 2
+             ================================================= -->
+
+        <div class="home-feature-card">
+
+            <div class="home-feature-icon">
+                02
+            </div>
+
+
+            <h3>
+                Employee Testing
+            </h3>
+
+
+            <p>
+                Employees can select available tests,
+                register automatically and complete
+                assessments online.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FEATURE 3
+             ================================================= -->
+
+        <div class="home-feature-card">
+
+            <div class="home-feature-icon">
+                03
+            </div>
+
+
+            <h3>
+                Visual Assessments
+            </h3>
+
+
+            <p>
+                Tests that require visual information
+                can use administrator-controlled
+                live screen sharing.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FEATURE 4
+             ================================================= -->
+
+        <div class="home-feature-card">
+
+            <div class="home-feature-icon">
+                04
+            </div>
+
+
+            <h3>
+                Performance Reports
+            </h3>
+
+
+            <p>
+                Individual and team-level assessment
+                results can be reviewed through reports.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ROLE SELECTION
+     ===================================================== -->
+
+<section
+    id="roles"
+    class="home-role-section"
+>
+
+
+    <div class="home-section-heading">
+
+
+        <span>
+            GET STARTED
+        </span>
+
+
+        <h2>
+            Choose your portal
+        </h2>
+
+
+        <p>
+            Select the portal that matches your role.
+        </p>
+
+
+    </div>
+
+
+
+    <div class="home-role-grid">
+
+
+        <!-- =================================================
+             ADMIN ROLE
+             ================================================= -->
+
+        <div class="home-role-card">
+
+
+            <div class="home-role-number">
+                ADMIN
+            </div>
+
+
+            <h3>
+                Assessment Administrator
+            </h3>
+
+
+            <p>
+                Create tests, manage assessments,
+                review results and control visual
+                screen sharing.
+            </p>
+
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="home-btn home-btn-primary"
+            >
+                Admin Login
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             EMPLOYEE ROLE
+             ================================================= -->
+
+        <div class="home-role-card">
+
+
+            <div class="home-role-number">
+                EMPLOYEE
+            </div>
+
+
+            <h3>
+                Assessment Participant
+            </h3>
+
+
+            <p>
+                View available assessments, enter your
+                employee details and complete assigned
+                tests.
+            </p>
+
+
+            <a
+                href="{{ url_for('test.employee_test_dashboard') }}"
+                class="home-btn home-btn-secondary"
+            >
+                Start Assessment
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="home-footer">
+
+
+    <div class="home-logo">
+        PKT <span>AI</span>
+    </div>
+
+
+    <p>
+        AI-powered assessment and performance platform.
+    </p>
+
+
+    <p class="home-copyright">
+        © 2026 PKT AI. All rights reserved.
+    </p>
+
+
+</footer>
+```
 
 </body>
 

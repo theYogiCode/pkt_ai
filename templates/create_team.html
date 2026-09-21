@@ -1,78 +1,222 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Create Team</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Team - PKT AI</title>
+
+    <!-- Use the existing common PKT AI stylesheet -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <!-- Page-specific form sizing -->
+    <style>
+
+        /* Keep the team form compact and professional */
+        .team-form {
+            max-width: 650px;
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- Page heading -->
-    <h2>Create Team</h2>
 
-    <hr>
+    <!-- =========================================================
+         TOP NAVIGATION
+         ========================================================= -->
+    <header class="topbar">
 
-    <!-- Team creation form -->
-    <form method="POST">
+        <div class="logo">
 
-        <!-- Team name -->
-        <label>
-            Team Name:
-        </label>
+            <div class="logo-badge">
+                PK
+            </div>
 
-        <br>
+            <span>
+                PKT AI
+            </span>
 
-        <input
-            type="text"
-            name="team_name"
-            required>
-
-        <br><br>
+        </div>
 
 
-        <!-- Process name -->
-        <label>
-            Process Name:
-        </label>
+        <div class="topbar-right">
 
-        <br>
+            <span class="user-name">
+                Team Management
+            </span>
 
-        <input
-            type="text"
-            name="process_name">
+        </div>
 
-        <br><br>
+    </header>
 
 
-        <!-- Manager name -->
-        <label>
-            Manager Name:
-        </label>
 
-        <br>
-
-        <input
-            type="text"
-            name="manager_name">
-
-        <br><br>
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+    <main class="main-content">
 
 
-        <!-- Submit -->
-        <button type="submit">
-            Save Team
-        </button>
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+        <div class="page-header">
 
-    </form>
+            <div>
 
-    <br>
+                <h1 class="page-title">
+                    Create Team
+                </h1>
 
-    <!-- Return to team list -->
-    <a href="{{ url_for('test.manage_teams') }}">
-        <button type="button">
-            Cancel
-        </button>
-    </a>
+                <p class="page-subtitle">
+                    Create a team and define its process and manager.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             TEAM FORM
+             ===================================================== -->
+        <div class="card team-form">
+
+            <h2 class="card-title">
+                Team Details
+            </h2>
+
+
+            <!-- Team creation form -->
+            <form method="POST">
+
+
+                <!-- =================================================
+                     TEAM NAME
+                     ================================================= -->
+                <div class="form-group">
+
+                    <label for="team_name">
+                        Team Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="team_name"
+                        name="team_name"
+                        class="form-control"
+                        placeholder="Enter team name"
+                        required>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PROCESS NAME
+                     ================================================= -->
+                <div class="form-group">
+
+                    <label for="process_name">
+                        Process Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="process_name"
+                        name="process_name"
+                        class="form-control"
+                        placeholder="Enter process name">
+
+                </div>
+
+
+
+                <!-- =================================================
+                     MANAGER NAME
+                     ================================================= -->
+                <div class="form-group">
+
+                    <label for="manager_name">
+                        Manager Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="manager_name"
+                        name="manager_name"
+                        class="form-control"
+                        placeholder="Enter manager name">
+
+                </div>
+
+
+
+                <!-- =================================================
+                     FORM ACTIONS
+                     ================================================= -->
+                <div
+                    style="
+                        display: flex;
+                        gap: 12px;
+                        margin-top: 24px;
+                    "
+                >
+
+                    <!-- Save team -->
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Save Team
+
+                    </button>
+
+
+                    <!-- Cancel -->
+                    <a
+                        href="{{ url_for('test.manage_teams') }}"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer class="footer">
+
+        <p>
+            PKT AI &copy; 2026
+        </p>
+
+    </footer>
+
 
 </body>
 

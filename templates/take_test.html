@@ -1,42 +1,208 @@
-<!-- This template displays the employee test interface.
-     Visual tests show the admin's shared screen beside the question. -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>PKT AI - Take Test</title>
 
-    <!-- Load the common PKT AI stylesheet. -->
+
+    <!-- Use the existing common PKT AI stylesheet -->
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}"
     >
+
+
+    <!-- Page-specific layout adjustments -->
+    <style>
+
+        /* =========================================================
+           TEST PAGE LAYOUT
+           Keeps the page wider and reduces side whitespace.
+           ========================================================= */
+
+        .test-container {
+            width: 96%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 24px 0 40px 0;
+        }
+
+
+        /* Give the test header the same clean width as the content */
+        .test-header {
+            width: 100%;
+        }
+
+
+        /* Make better use of available screen width */
+        .test-workspace {
+            width: 100%;
+        }
+
+
+        /* =========================================================
+           SCREEN SHARE CONTROLS
+           ========================================================= */
+
+        .screen-share-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px 14px;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+
+
+        .screen-share-control {
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #374151;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .screen-share-control:hover {
+            background: #f1f5f9;
+        }
+
+
+        /* =========================================================
+           SHARED VISUAL AREA
+           ========================================================= */
+
+        .screen-share-viewer {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-height: 420px;
+            background: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .screen-share-viewer .shared-screen {
+            width: 100%;
+            height: 420px;
+            object-fit: contain;
+            background: #111827;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+
+        /* Full-screen mode */
+        .screen-share-viewer:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            background: #000000;
+        }
+
+
+        .screen-share-viewer:fullscreen .shared-screen {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        /* Placeholder */
+        .screen-share-viewer .screen-share-placeholder {
+            position: absolute;
+            text-align: center;
+            padding: 20px;
+            color: #d1d5db;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE DESIGN
+           ========================================================= */
+
+        @media (max-width: 1000px) {
+
+            .test-container {
+                width: 94%;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .test-container {
+                width: 92%;
+                padding-top: 16px;
+            }
+
+
+            .screen-share-controls {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+
+            .screen-share-viewer {
+                min-height: 300px;
+            }
+
+
+            .screen-share-viewer .shared-screen {
+                height: 300px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
 
 <body>
 
-    <!-- Main test container. -->
+
+    <!-- =========================================================
+         MAIN TEST CONTAINER
+         ========================================================= -->
     <div class="test-container">
 
 
-        <!-- Test header. -->
+        <!-- =====================================================
+             TEST HEADER
+             ===================================================== -->
         <div class="test-header">
 
-            <h2>
-                {{ test.test_name }}
-            </h2>
+            <div>
 
-            <p>
-                Candidate:
-                {{ session.get("candidate_name") }}
-                |
-                Candidate ID:
-                {{ session.get("candidate_id") }}
-            </p>
+                <h2>
+                    {{ test.test_name }}
+                </h2>
+
+                <p>
+
+                    Candidate:
+                    {{ session.get("candidate_name") }}
+
+                    &nbsp; | &nbsp;
+
+                    Candidate ID:
+                    {{ session.get("candidate_id") }}
+
+                </p>
+
+            </div>
 
         </div>
 
@@ -45,7 +211,6 @@
         <!-- =====================================================
              TEST CONTENT
              ===================================================== -->
-
         <div
             class="
                 test-workspace
@@ -59,11 +224,12 @@
             <!-- =================================================
                  ADMIN SHARED VISUAL
                  ================================================= -->
-
             {% if test.requires_screen_share %}
 
                 <div class="screen-share-card">
 
+
+                    <!-- Screen share header -->
                     <div class="screen-share-header">
 
                         <h3>
@@ -80,13 +246,19 @@
                     </div>
 
 
-                    <div class="screen-share-content">
+
+                    <!-- Shared visual -->
+                    <div
+                        id="screenShareViewer"
+                        class="screen-share-viewer"
+                    >
 
                         <video
                             id="testRemoteScreen"
                             class="shared-screen"
                             autoplay
                             playsinline
+                            style="display: none;"
                         ></video>
 
 
@@ -94,10 +266,58 @@
                             id="screenSharePlaceholder"
                             class="screen-share-placeholder"
                         >
-                            Waiting for the administrator's shared visual...
+                            Waiting for the administrator's
+                            shared visual...
                         </p>
 
                     </div>
+
+
+
+                    <!-- Visual controls -->
+                    <div class="screen-share-controls">
+
+                        <button
+                            type="button"
+                            id="zoomOutButton"
+                            class="screen-share-control"
+                            title="Zoom Out"
+                        >
+                            −
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="resetZoomButton"
+                            class="screen-share-control"
+                            title="Reset Zoom"
+                        >
+                            Reset
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="zoomInButton"
+                            class="screen-share-control"
+                            title="Zoom In"
+                        >
+                            +
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="fullscreenButton"
+                            class="screen-share-control"
+                            title="Full Screen"
+                        >
+                            Full Screen
+                        </button>
+
+                    </div>
+
 
                 </div>
 
@@ -108,11 +328,10 @@
             <!-- =================================================
                  QUESTION AREA
                  ================================================= -->
-
             <div class="question-card">
 
 
-                <!-- Question progress. -->
+                <!-- Question progress -->
                 <div class="question-progress">
 
                     Question
@@ -123,7 +342,8 @@
                 </div>
 
 
-                <!-- Question text. -->
+
+                <!-- Question -->
                 <h3 class="question-text">
 
                     {{ question.question_text }}
@@ -132,7 +352,7 @@
 
 
 
-                <!-- Answer form. -->
+                <!-- Answer form -->
                 <form method="POST">
 
 
@@ -150,8 +370,11 @@
                         >
 
                         <span>
+
                             <strong>A.</strong>
+
                             {{ question.option_a }}
+
                         </span>
 
                     </label>
@@ -172,8 +395,11 @@
                         >
 
                         <span>
+
                             <strong>B.</strong>
+
                             {{ question.option_b }}
+
                         </span>
 
                     </label>
@@ -194,8 +420,11 @@
                         >
 
                         <span>
+
                             <strong>C.</strong>
+
                             {{ question.option_c }}
+
                         </span>
 
                     </label>
@@ -216,19 +445,22 @@
                         >
 
                         <span>
+
                             <strong>D.</strong>
+
                             {{ question.option_d }}
+
                         </span>
 
                     </label>
 
 
 
-                    <!-- Navigation buttons. -->
+                    <!-- Navigation -->
                     <div class="test-navigation">
 
 
-                        <!-- Previous button. -->
+                        <!-- Previous -->
                         {% if question_number > 1 %}
 
                             <button
@@ -246,7 +478,8 @@
 
                         <div class="navigation-right">
 
-                            <!-- Next button. -->
+
+                            <!-- Next -->
                             {% if question_number < total_questions %}
 
                                 <button
@@ -262,7 +495,7 @@
 
 
 
-                            <!-- Submit button. -->
+                            <!-- Submit -->
                             {% if question_number == total_questions %}
 
                                 <button
@@ -276,6 +509,7 @@
 
                             {% endif %}
 
+
                         </div>
 
                     </div>
@@ -285,7 +519,9 @@
 
             </div>
 
+
         </div>
+
 
     </div>
 
@@ -294,66 +530,208 @@
     <!-- =========================================================
          SCREEN SHARING JAVASCRIPT
          ========================================================= -->
-
     {% if test.requires_screen_share %}
 
-        <!-- Load Socket.IO for WebRTC signaling. -->
-        <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+        <!-- Socket.IO -->
+        <script
+            src="https://cdn.socket.io/4.8.1/socket.io.min.js">
+        </script>
 
 
         <script>
 
-            // Connect this test page to the Flask-SocketIO server.
+            // Connect to Flask-SocketIO.
             const testSocket = io();
 
 
-            // Get the screen-sharing status element.
+            // Screen share status.
             const testScreenShareStatus =
                 document.getElementById(
                     "testScreenShareStatus"
                 );
 
 
-            // Get the employee's shared-screen video element.
+            // Remote admin screen.
             const testRemoteScreen =
                 document.getElementById(
                     "testRemoteScreen"
                 );
 
 
-            // Get the placeholder displayed while waiting
-            // for the administrator's screen.
+            // Waiting message.
             const screenSharePlaceholder =
                 document.getElementById(
                     "screenSharePlaceholder"
                 );
 
 
-            // Store the WebRTC connection.
+            // Screen viewer container.
+            const screenShareViewer =
+                document.getElementById(
+                    "screenShareViewer"
+                );
+
+
+            // WebRTC connection.
             let testPeerConnection = null;
 
 
-            // Store the administrator's Socket.IO ID.
+            // Admin Socket.IO ID.
             let testAdminSid = null;
 
 
+            // =====================================================
+            // ZOOM SETTINGS
+            // =====================================================
 
-            // -----------------------------------------------------
-            // Check whether the administrator is currently sharing.
-            // -----------------------------------------------------
+            let screenZoom = 1;
+
+            const minimumZoom = 0.5;
+
+            const maximumZoom = 3;
+
+            const zoomStep = 0.25;
+
+
+            // Zoom controls.
+            const zoomInButton =
+                document.getElementById(
+                    "zoomInButton"
+                );
+
+
+            const zoomOutButton =
+                document.getElementById(
+                    "zoomOutButton"
+                );
+
+
+            const resetZoomButton =
+                document.getElementById(
+                    "resetZoomButton"
+                );
+
+
+            const fullscreenButton =
+                document.getElementById(
+                    "fullscreenButton"
+                );
+
+
+            // Apply zoom.
+            function applyScreenZoom() {
+
+                testRemoteScreen.style.transform =
+                    "scale(" + screenZoom + ")";
+
+            }
+
+
+            // Zoom in.
+            zoomInButton.addEventListener(
+                "click",
+                function() {
+
+                    if (screenZoom < maximumZoom) {
+
+                        screenZoom += zoomStep;
+
+                        applyScreenZoom();
+
+                    }
+
+                }
+            );
+
+
+            // Zoom out.
+            zoomOutButton.addEventListener(
+                "click",
+                function() {
+
+                    if (screenZoom > minimumZoom) {
+
+                        screenZoom -= zoomStep;
+
+                        applyScreenZoom();
+
+                    }
+
+                }
+            );
+
+
+            // Reset zoom.
+            resetZoomButton.addEventListener(
+                "click",
+                function() {
+
+                    screenZoom = 1;
+
+                    applyScreenZoom();
+
+                }
+            );
+
+
+            // Full screen.
+            fullscreenButton.addEventListener(
+                "click",
+                function() {
+
+                    if (!document.fullscreenElement) {
+
+                        if (
+                            screenShareViewer.requestFullscreen
+                        ) {
+
+                            screenShareViewer.requestFullscreen();
+
+                        }
+
+                    }
+                    else {
+
+                        document.exitFullscreen();
+
+                    }
+
+                }
+            );
+
+
+            // Update full-screen button text.
+            document.addEventListener(
+                "fullscreenchange",
+                function() {
+
+                    if (document.fullscreenElement) {
+
+                        fullscreenButton.textContent =
+                            "Exit Full Screen";
+
+                    }
+                    else {
+
+                        fullscreenButton.textContent =
+                            "Full Screen";
+
+                    }
+
+                }
+            );
+
+
+            // =====================================================
+            // SCREEN SHARE CONNECTION
+            // =====================================================
 
             testSocket.emit(
                 "check_screen_share"
             );
 
 
-
-            // -----------------------------------------------------
-            // Receive the current screen-sharing status.
-            //
-            // If sharing is active, automatically join.
-            // -----------------------------------------------------
-
+            // Current screen share status.
             testSocket.on(
                 "screen_share_status",
                 function(data) {
@@ -380,12 +758,7 @@
             );
 
 
-
-            // -----------------------------------------------------
-            // Admin starts sharing while employee is already
-            // on the test page.
-            // -----------------------------------------------------
-
+            // Admin starts sharing.
             testSocket.on(
                 "screen_share_started",
                 function() {
@@ -402,27 +775,25 @@
             );
 
 
-
-            // -----------------------------------------------------
             // Create WebRTC connection.
-            // -----------------------------------------------------
-
             function createTestPeerConnection() {
 
                 testPeerConnection =
                     new RTCPeerConnection(
                         {
                             iceServers: [
+
                                 {
                                     urls:
                                         "stun:stun.l.google.com:19302"
                                 }
+
                             ]
                         }
                     );
 
 
-                // Receive the administrator's shared screen.
+                // Receive shared screen.
                 testPeerConnection.ontrack =
                     function(event) {
 
@@ -444,7 +815,7 @@
                     };
 
 
-                // Send ICE candidates to the administrator.
+                // Send ICE candidates.
                 testPeerConnection.onicecandidate =
                     function(event) {
 
@@ -457,7 +828,9 @@
                                 "ice_candidate",
                                 {
                                     target: testAdminSid,
-                                    candidate: event.candidate
+
+                                    candidate:
+                                        event.candidate
                                 }
                             );
 
@@ -471,11 +844,7 @@
             }
 
 
-
-            // -----------------------------------------------------
-            // Receive WebRTC offer from administrator.
-            // -----------------------------------------------------
-
+            // Receive WebRTC offer.
             testSocket.on(
                 "offer",
                 async function(data) {
@@ -484,7 +853,6 @@
                         data.admin_sid;
 
 
-                    // Close an old connection if one exists.
                     if (testPeerConnection) {
 
                         testPeerConnection.close();
@@ -492,17 +860,14 @@
                     }
 
 
-                    // Create a fresh WebRTC connection.
                     createTestPeerConnection();
 
 
-                    // Apply the administrator's offer.
                     await testPeerConnection.setRemoteDescription(
                         data.offer
                     );
 
 
-                    // Create an answer.
                     const answer =
                         await testPeerConnection.createAnswer();
 
@@ -512,11 +877,11 @@
                     );
 
 
-                    // Send the answer back to the administrator.
                     testSocket.emit(
                         "answer",
                         {
                             target: testAdminSid,
+
                             answer:
                                 testPeerConnection.localDescription
                         }
@@ -526,11 +891,7 @@
             );
 
 
-
-            // -----------------------------------------------------
             // Receive ICE candidates.
-            // -----------------------------------------------------
-
             testSocket.on(
                 "ice_candidate",
                 async function(data) {
@@ -562,11 +923,7 @@
             );
 
 
-
-            // -----------------------------------------------------
-            // Admin stops screen sharing.
-            // -----------------------------------------------------
-
+            // Admin stops sharing.
             testSocket.on(
                 "screen_share_stopped",
                 function() {
@@ -594,6 +951,11 @@
 
                     screenSharePlaceholder.style.display =
                         "block";
+
+
+                    screenZoom = 1;
+
+                    applyScreenZoom();
 
                 }
             );

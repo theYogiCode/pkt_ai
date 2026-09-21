@@ -49,8 +49,8 @@ register_screen_share_events(socketio)
 app.register_blueprint(test)
 app.register_blueprint(auth)
 
-# Public home page for PKT AI.
-# This page is accessible without admin authentication.
+# Public PKT AI homepage.
+# Flask renders index.html from the templates folder.
 
 @app.route("/")
 def home():
@@ -58,6 +58,7 @@ def home():
     return render_template(
         "index.html"
     )
+
 if __name__ == "__main__":
 
     # Create database tables if they do not already exist.

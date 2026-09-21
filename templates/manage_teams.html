@@ -1,61 +1,380 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Manage Teams</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Teams - PKT AI</title>
+
+
+    <!--
+        Load the common PKT AI stylesheet.
+
+        Main styling is maintained separately in:
+        static/css/style.css
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <!--
+        Small page-specific adjustments only.
+    -->
+
+    <style>
+
+        /* Allow the teams table to scroll on smaller screens */
+        .team-table-container {
+            overflow-x: auto;
+        }
+
+
+        /* Keep the ID column compact */
+        .team-id {
+            width: 80px;
+        }
+
+
+        /* Empty state */
+        .empty-teams {
+            padding: 32px;
+            text-align: center;
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- Page heading -->
-    <h2>Manage Teams</h2>
 
-    <hr>
+<!-- =====================================================
+     TOP NAVIGATION
+     ===================================================== -->
 
-    <!-- Link to create a new team -->
-    <a href="{{ url_for('test.create_team') }}">
-        <button type="button">
-            Add Team
-        </button>
-    </a>
+<header class="topbar">
 
-    <br><br>
+    <div class="logo">
 
-    <!-- Display existing teams -->
-    <table border="1">
+        <div class="logo-badge">
+            PK
+        </div>
 
-        <tr>
-            <th>ID</th>
-            <th>Team Name</th>
-            <th>Process</th>
-            <th>Manager</th>
-        </tr>
+        <span>
+            PKT AI
+        </span>
 
-        {% for team in teams %}
+    </div>
 
-        <tr>
 
-            <td>
-                {{ team.id }}
-            </td>
+    <div class="topbar-right">
 
-            <td>
-                {{ team.team_name }}
-            </td>
+        <span class="user-name">
+            Team Management
+        </span>
 
-            <td>
-                {{ team.process_name }}
-            </td>
+    </div>
 
-            <td>
-                {{ team.manager_name }}
-            </td>
+</header>
 
-        </tr>
 
-        {% endfor %}
 
-    </table>
+<!-- =====================================================
+     APPLICATION LAYOUT
+     ===================================================== -->
+
+<div class="app-container">
+
+
+    <!-- =================================================
+         LEFT SIDEBAR
+         ================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-title">
+            Administration
+        </div>
+
+
+        <!-- Dashboard -->
+
+        <a href="/">
+            Dashboard
+        </a>
+
+
+        <!-- Create Test -->
+
+        <a href="/tests/create">
+            Create Test
+        </a>
+
+
+        <!-- Tests -->
+
+        <a href="/tests">
+            Tests
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Management
+        </div>
+
+
+        <!-- Teams -->
+
+        <a href="{{ url_for('test.manage_teams') }}"
+           class="active">
+
+            Teams
+
+        </a>
+
+
+        <!-- Employee management is not implemented yet -->
+
+        <div class="nav-item disabled">
+            Employees
+        </div>
+
+
+        <!-- Reports -->
+
+        <a href="{{ url_for('test.test_results') }}">
+            Reports
+        </a>
+
+
+
+        <div class="sidebar-title">
+            Tools
+        </div>
+
+
+        <!-- Administrator Screen Share -->
+
+        <a href="{{ url_for('test.admin_screen_share') }}">
+            Screen Share
+        </a>
+
+
+        <!-- AI Insights -->
+
+        <a href="{{ url_for('test.dashboard_ai_insights') }}">
+            AI Insights
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Manage Teams
+                </h1>
+
+                <p class="page-subtitle">
+                    Create and manage teams used for employee assessments.
+                </p>
+
+            </div>
+
+
+            <!-- Add Team -->
+
+            <a
+                href="{{ url_for('test.create_team') }}"
+                class="btn btn-primary">
+
+                + Add Team
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TEAM LIST
+             ================================================= -->
+
+        <div class="card">
+
+            <h2 class="card-title">
+                Teams
+            </h2>
+
+            <p class="page-subtitle">
+
+                View the teams currently configured in PKT AI.
+
+            </p>
+
+
+            <br>
+
+
+            {% if teams %}
+
+
+            <div class="table-container team-table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="team-id">
+                                ID
+                            </th>
+
+                            <th>
+                                Team Name
+                            </th>
+
+                            <th>
+                                Process
+                            </th>
+
+                            <th>
+                                Manager
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for team in teams %}
+
+                        <tr>
+
+                            <td>
+                                {{ team.id }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    {{ team.team_name }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                {{ team.process_name }}
+                            </td>
+
+                            <td>
+                                {{ team.manager_name }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- =================================================
+                 EMPTY STATE
+                 ================================================= -->
+
+            <div class="empty-teams">
+
+                <span class="badge badge-warning">
+                    No Teams
+                </span>
+
+
+                <h3>
+                    No teams have been created yet.
+                </h3>
+
+
+                <p class="page-subtitle">
+
+                    Create a team to start assigning employees
+                    to assessment groups.
+
+                </p>
+
+
+                <br>
+
+
+                <a
+                    href="{{ url_for('test.create_team') }}"
+                    class="btn btn-primary">
+
+                    + Create First Team
+
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="footer">
+
+            PKT AI • Intelligent Assessment Platform
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
 
