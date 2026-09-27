@@ -19,6 +19,8 @@ from flask_socketio import SocketIO
 # Flask-SocketIO registers all WebRTC signaling events.
 import routes.screen_share
 
+import os
+
 
 app = Flask(__name__)
 
@@ -68,5 +70,7 @@ if __name__ == "__main__":
     # Start Flask through SocketIO.
     socketio.run(
         app,
-        debug=True
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False
     )
