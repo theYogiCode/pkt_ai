@@ -10,14 +10,18 @@ class Config:
         "pkt_ai_secret_key"
     )
 
-    # Use Render PostgreSQL when DATABASE_URL exists.
-    # Otherwise, use local SQLite for development.
+    # Get DATABASE_URL from the environment.
     DATABASE_URL = os.getenv("DATABASE_URL")
 
+    # Use PostgreSQL on Render.
     if DATABASE_URL:
 
-        SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace(
+            "postgresql://",
+            "postgresql+psycopg://"
+        )
 
+    # Use SQLite locally.
     else:
 
         SQLALCHEMY_DATABASE_URI = (
