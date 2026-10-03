@@ -21,6 +21,8 @@ import routes.screen_share
 
 import os
 
+from werkzeug.security import generate_password_hash
+from database.admin import Admin
 
 app = Flask(__name__)
 
@@ -60,6 +62,34 @@ def home():
     return render_template(
         "index.html"
     )
+
+@app.route("/setup-admin-once")
+def setup_admin_once():
+
+    ADMIN_EMAIL = "admin@pkt.com"
+    ADMIN_PASSWORD = "admin@123"
+    ADMIN_NAME = "Yogesh Singh"
+
+    with app.app_context():
+
+        existing_admin = Admin.query.filter_by(
+            email=ADMIN_EMAIL
+        ).first()
+
+        if existing_admin:
+            return "Admin already exists."
+
+        new_admin = Admin(
+            name=ADMIN_NAME,
+            email=ADMIN_EMAIL,
+            password=generate_password_hash(ADMIN_PASSWORD),
+            role="Admin"
+        )
+
+        db.session.add(new_admin)
+        db.session.commit()
+
+        return "Admin created successfully."
 
 if __name__ == "__main__":
 
